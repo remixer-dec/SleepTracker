@@ -1,0 +1,11 @@
+services:
+  sleeptracker:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - sleeptracker-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  sleeptracker-data:
