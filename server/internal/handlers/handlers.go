@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 	"sleeptracker/internal/auth"
 	"sleeptracker/internal/db"
 	"sleeptracker/internal/middleware"
@@ -307,20 +308,24 @@ func (h *Handlers) Join(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	link, err := h.db.GetJoinLink(token)
-	if err == db.ErrNotFound {
+	tokenPath := "data/join_token"
+	info, err := os.Stat(tokenPath)
+	if err != nil {
 		h.respondError(w, http.StatusNotFound, "Invalid token")
 		return
 	}
-	if err != nil {
-		h.respondError(w, http.StatusInternalServerError, "Failed to verify token")
+	if time.Since(info.ModTime()) > 24*time.Hour {
+		os.Remove(tokenPath)
+		h.respondError(w, http.StatusNotFound, "Invalid token")
+		return
+	}
+	tokenBytes, err := os.ReadFile(tokenPath)
+	if err != nil || strings.TrimSpace(string(tokenBytes)) != token {
+		h.respondError(w, http.StatusNotFound, "Invalid token")
 		return
 	}
 
-	if link.Used {
-		h.respondError(w, http.StatusBadRequest, "Token already used")
-		return
-	}
+	os.Remove(tokenPath)
 
 	userID, err := auth.GenerateUserID()
 	if err != nil {
@@ -336,11 +341,6 @@ func (h *Handlers) Join(w http.ResponseWriter, r *http.Request) {
 
 	if err := h.db.SaveUser(user); err != nil {
 		h.respondError(w, http.StatusInternalServerError, "Failed to create user")
-		return
-	}
-
-	if err := h.db.MarkJoinLinkUsed(token); err != nil {
-		h.respondError(w, http.StatusInternalServerError, "Failed to mark token as used")
 		return
 	}
 

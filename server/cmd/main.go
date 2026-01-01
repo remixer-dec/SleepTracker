@@ -12,9 +12,7 @@ import (
 	"sleeptracker/internal/db"
 	"sleeptracker/internal/handlers"
 	"sleeptracker/internal/middleware"
-	"sleeptracker/internal/models"
 	"strings"
-	"time"
 )
 
 func main() {
@@ -59,24 +57,20 @@ func main() {
 		return
 	}
 
+	joinTokenPath := filepath.Join(filepath.Dir(*dbPath), "join_token")
+
 	if *createJoinLink {
 		token, err := auth.GenerateJoinToken()
 		if err != nil {
 			log.Fatalf("Failed to generate join token: %v", err)
 		}
 
-		link := &models.JoinLink{
-			Token:     token,
-			Used:      false,
-			CreatedAt: time.Now(),
+		if err := os.WriteFile(joinTokenPath, []byte(token), 0600); err != nil {
+			log.Fatalf("Failed to write join token: %v", err)
 		}
 
-		if err := database.SaveJoinLink(link); err != nil {
-			log.Fatalf("Failed to save join link: %v", err)
-		}
-
-		fmt.Printf("Join link created: /join?token=%s\n", token)
-		fmt.Println("This link can only be used once.")
+		fmt.Printf("Join token created: %s\n", token)
+		fmt.Printf("Use: /api/join?token=%s\n", token)
 		return
 	}
 
