@@ -1,18 +1,22 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"io/fs"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"sleeptracker/internal/auth"
 	"sleeptracker/internal/db"
 	"sleeptracker/internal/handlers"
 	"sleeptracker/internal/middleware"
 	"strings"
+	"syscall"
+	"time"
 )
 
 func main() {
@@ -20,10 +24,9 @@ func main() {
 	dbPath := flag.String("db", "data/sleeptracker.db", "Database file path")
 	staticDir := flag.String("static", "static", "Static files directory")
 	createJoinLink := flag.Bool("create-join-link", false, "Create a one-time join link")
-	setExternalKey := flag.String("set-external-key", "", "Set external API key for integrations")
 	flag.Parse()
 
-	if err := os.MkdirAll(filepath.Dir(*dbPath), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(*dbPath), 0700); err != nil {
 		log.Fatalf("Failed to create data directory: %v", err)
 	}
 
@@ -47,14 +50,16 @@ func main() {
 		log.Fatalf("Failed to get secret key: %v", err)
 	}
 
-	authenticator := auth.New(secretKey)
+	authenticator, err := auth.New(secretKey)
+	if err != nil {
+		log.Fatalf("Key init issue: %v", err)
+	}
 
-	if *setExternalKey != "" {
-		if err := database.SetConfig("external_api_key", *setExternalKey); err != nil {
+	if envKey := os.Getenv("SLEEP_EXTERNAL_KEY"); envKey != "" {
+		if err := database.SetConfig("external_api_key", envKey); err != nil {
 			log.Fatalf("Failed to set external API key: %v", err)
 		}
-		fmt.Println("External API key set successfully")
-		return
+		log.Println("External API key updated from environment variable")
 	}
 
 	joinTokenPath := filepath.Join(filepath.Dir(*dbPath), "join_token")
@@ -183,10 +188,32 @@ func main() {
 
 	handler := authMiddleware.Authenticate(mux)
 
-	log.Printf("Server starting on port %s", *port)
-	if err := http.ListenAndServe(":"+*port, handler); err != nil {
-		log.Fatalf("Server failed: %v", err)
+	srv := &http.Server{
+		Addr:         ":" + *port,
+		Handler:      handler,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 30 * time.Second,
+		IdleTimeout:  120 * time.Second,
 	}
+	go func() {
+		log.Printf("Server starting on port %s", *port)
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("Server failed: %v", err)
+		}
+	}()
+
+	// Wait for interrupt signal (Ctrl+C)
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	<-c
+
+	log.Println("Shutting down server...")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatalf("Server forced to shutdown: %v", err)
+	}
+	log.Println("Server exiting")
 }
 
 func isDir(path string) bool {

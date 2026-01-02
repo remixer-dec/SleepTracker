@@ -3,13 +3,25 @@
     <div class="heatmap-header">
       <button class="btn-icon" @click="prevMonth">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-          <path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path
+            d="M12 4l-6 6 6 6"
+            stroke="currentColor"
+            stroke-width="2"
+            fill="none"
+            stroke-linecap="round"
+          />
         </svg>
       </button>
       <span class="month-label">{{ monthLabel }}</span>
       <button class="btn-icon" @click="nextMonth" :disabled="isCurrentMonth">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-          <path d="M8 4l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path
+            d="M8 4l6 6-6 6"
+            stroke="currentColor"
+            stroke-width="2"
+            fill="none"
+            stroke-linecap="round"
+          />
         </svg>
       </button>
     </div>
@@ -31,11 +43,11 @@
           :key="day.date"
           class="heatmap-cell"
           :class="{
-            'empty': !day.inMonth,
-            'today': day.isToday,
-            'has-entry': day.hasEntry
+            empty: !day.inMonth,
+            today: day.isToday,
+            'has-entry': day.hasEntry,
           }"
-          :style="{ backgroundColor: day.color }"
+          :style="{ background: day.color }"
           :title="day.hasEntry ? formatTooltip(day) : ''"
           @click="handleCellClick(day)"
         >
@@ -44,83 +56,87 @@
       </div>
     </div>
 
-    <p class="swipe-hint text-dim text-xs text-center mt-sm">{{ t('actions.swipeHint') }}</p>
+    <p class="swipe-hint text-dim text-xs text-center mt-sm">
+      {{ t("actions.swipeHint") }}
+    </p>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { formatDate, getValueColor } from '../utils/calculations.js'
+import { ref, computed, watch } from "vue";
+import { useI18n } from "vue-i18n";
+import { formatDate, getValueColor } from "../utils/calculations.js";
 
-const { t, locale } = useI18n()
+const { t, locale } = useI18n();
 
 const props = defineProps({
   habit: {
     type: Object,
-    required: true
+    required: true,
   },
   entries: {
     type: Array,
-    default: () => []
-  }
-})
+    default: () => [],
+  },
+});
 
-const emit = defineEmits(['select-date'])
+const emit = defineEmits(["select-date"]);
 
-const currentDate = ref(new Date())
-const touchStartX = ref(0)
-const touchEndX = ref(0)
-const gridContainer = ref(null)
+const currentDate = ref(new Date());
+const touchStartX = ref(0);
+const touchEndX = ref(0);
+const gridContainer = ref(null);
 
 const monthLabel = computed(() => {
-  const options = { year: 'numeric', month: 'long' }
-  return currentDate.value.toLocaleDateString(locale.value, options)
-})
+  const options = { year: "numeric", month: "long" };
+  return currentDate.value.toLocaleDateString(locale.value, options);
+});
 
 const isCurrentMonth = computed(() => {
-  const now = new Date()
-  return currentDate.value.getMonth() === now.getMonth() &&
-         currentDate.value.getFullYear() === now.getFullYear()
-})
+  const now = new Date();
+  return (
+    currentDate.value.getMonth() === now.getMonth() &&
+    currentDate.value.getFullYear() === now.getFullYear()
+  );
+});
 
 const weekdayLabels = computed(() => {
-  const days = []
-  const baseDate = new Date(2024, 0, 1) // Monday, January 1, 2024
+  const days = [];
+  const baseDate = new Date(2024, 0, 1); // Monday, January 1, 2024
   for (let i = 0; i < 7; i++) {
-    const date = new Date(baseDate)
-    date.setDate(date.getDate() + i)
-    days.push(date.toLocaleDateString(locale.value, { weekday: 'narrow' }))
+    const date = new Date(baseDate);
+    date.setDate(date.getDate() + i);
+    days.push(date.toLocaleDateString(locale.value, { weekday: "narrow" }));
   }
-  return days
-})
+  return days;
+});
 
 const entriesByDate = computed(() => {
-  const map = new Map()
-  props.entries.forEach(entry => {
-    map.set(entry.date, entry)
-  })
-  return map
-})
+  const map = new Map();
+  props.entries.forEach((entry) => {
+    map.set(entry.date, entry);
+  });
+  return map;
+});
 
 const displayDays = computed(() => {
-  const days = []
-  const year = currentDate.value.getFullYear()
-  const month = currentDate.value.getMonth()
-  const today = formatDate(new Date())
+  const days = [];
+  const year = currentDate.value.getFullYear();
+  const month = currentDate.value.getMonth();
+  const today = formatDate(new Date());
 
-  const firstDay = new Date(year, month, 1)
-  const lastDay = new Date(year, month + 1, 0)
-  const startOffset = (firstDay.getDay() + 6) % 7
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const startOffset = (firstDay.getDay() + 6) % 7;
 
   for (let i = 0; i < startOffset; i++) {
-    days.push({ date: '', inMonth: false, color: 'transparent' })
+    days.push({ date: "", inMonth: false, color: "transparent" });
   }
 
   for (let d = 1; d <= lastDay.getDate(); d++) {
-    const date = formatDate(new Date(year, month, d))
-    const entry = entriesByDate.value.get(date)
-    const hasEntry = !!entry
+    const date = formatDate(new Date(year, month, d));
+    const entry = entriesByDate.value.get(date);
+    const hasEntry = !!entry;
 
     days.push({
       date,
@@ -129,90 +145,95 @@ const displayDays = computed(() => {
       isToday: date === today,
       hasEntry,
       value: entry?.value,
-      color: hasEntry ? getValueColor(entry.value, props.habit) : 'var(--color-heatmap-empty)'
-    })
+      color: hasEntry
+        ? getValueColor(entry.value, props.habit)
+        : "var(--color-heatmap-empty)",
+    });
   }
 
-  const remaining = 7 - (days.length % 7)
+  const remaining = 7 - (days.length % 7);
   if (remaining < 7) {
     for (let i = 0; i < remaining; i++) {
-      days.push({ date: '', inMonth: false, color: 'transparent' })
+      days.push({ date: "", inMonth: false, color: "transparent" });
     }
   }
 
-  return days
-})
+  return days;
+});
 
 const gridStyle = computed(() => ({
-  gridTemplateRows: `repeat(${Math.ceil(displayDays.value.length / 7)}, 1fr)`
-}))
+  gridTemplateRows: `repeat(${Math.ceil(displayDays.value.length / 7)}, 1fr)`,
+}));
 
 function prevMonth() {
   currentDate.value = new Date(
     currentDate.value.getFullYear(),
     currentDate.value.getMonth() - 1,
-    1
-  )
+    1,
+  );
 }
 
 function nextMonth() {
-  if (isCurrentMonth.value) return
+  if (isCurrentMonth.value) return;
   currentDate.value = new Date(
     currentDate.value.getFullYear(),
     currentDate.value.getMonth() + 1,
-    1
-  )
+    1,
+  );
 }
 
 function handleCellClick(day) {
   if (day.inMonth) {
-    emit('select-date', day.date)
+    emit("select-date", day.date);
   }
 }
 
 function formatTooltip(day) {
-  if (!day.hasEntry) return ''
-  const value = day.value
-  if (props.habit.type === 'boolean') {
-    return value ? t('entry.yes') : t('entry.no')
+  if (!day.hasEntry) return "";
+  const value = day.value;
+  if (props.habit.type === "boolean") {
+    return value ? t("entry.yes") : t("entry.no");
   }
-  if (props.habit.type === 'mood') {
-    const moods = ['😢', '😐', '😄']
-    return moods[Math.min(Math.max(value, 0), 2)]
+  if (props.habit.type === "mood") {
+    const moods = ["😢", "😐", "😄"];
+    return moods[Math.min(Math.max(value, 0), 2)];
   }
-  if (props.habit.type === 'rating') {
-    return '★'.repeat(value)
+  if (props.habit.type === "rating") {
+    return "★".repeat(value);
   }
-  return String(value)
+  return String(value);
 }
 
 function handleTouchStart(e) {
-  touchStartX.value = e.touches[0].clientX
+  touchStartX.value = e.touches[0].clientX;
 }
 
 function handleTouchMove(e) {
-  touchEndX.value = e.touches[0].clientX
+  touchEndX.value = e.touches[0].clientX;
 }
 
 function handleTouchEnd() {
-  const diff = touchStartX.value - touchEndX.value
-  const threshold = 50
+  const diff = touchStartX.value - touchEndX.value;
+  const threshold = 50;
 
   if (Math.abs(diff) > threshold) {
     if (diff > 0) {
-      nextMonth()
+      nextMonth();
     } else {
-      prevMonth()
+      prevMonth();
     }
   }
 
-  touchStartX.value = 0
-  touchEndX.value = 0
+  touchStartX.value = 0;
+  touchEndX.value = 0;
 }
 
-watch(() => props.habit?.id, () => {
-  currentDate.value = new Date()
-})
+watch(
+  () => props.habit?.id,
+  () => {
+    currentDate.value = new Date();
+  },
+);
 </script>
 
 <style scoped>
@@ -273,8 +294,11 @@ watch(() => props.habit?.id, () => {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.1s, box-shadow 0.1s;
+  transition:
+    transform 0.1s,
+    box-shadow 0.1s;
   position: relative;
+  border-radius: 20px;
 }
 
 .heatmap-cell:not(.empty):hover {
@@ -288,13 +312,14 @@ watch(() => props.habit?.id, () => {
 }
 
 .heatmap-cell.today {
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.6);
+  box-shadow: inset 0 0 0 2px #304d53;
 }
 
 .cell-day {
   font-size: var(--font-size-xs);
   color: var(--color-text);
   opacity: 0.8;
+  font-size: 2rem;
 }
 
 .heatmap-cell.has-entry .cell-day {

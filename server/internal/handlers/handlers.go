@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"crypto/subtle"
 	"encoding/json"
 	"net/http"
 	"os"
@@ -320,12 +321,13 @@ func (h *Handlers) Join(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	tokenBytes, err := os.ReadFile(tokenPath)
-	if err != nil || strings.TrimSpace(string(tokenBytes)) != token {
+	os.Remove(tokenPath)
+	tokenFromFile := strings.TrimSpace(string(tokenBytes))
+
+	if err != nil || subtle.ConstantTimeCompare([]byte(tokenFromFile), []byte(token)) != 1 {
 		h.respondError(w, http.StatusNotFound, "Invalid token")
 		return
 	}
-
-	os.Remove(tokenPath)
 
 	userID, err := auth.GenerateUserID()
 	if err != nil {
@@ -443,7 +445,7 @@ func (h *Handlers) ExternalUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	storedKey, err := h.db.GetConfig("external_api_key")
-	if err != nil || storedKey != apiKey {
+	if err != nil || subtle.ConstantTimeCompare([]byte(storedKey), []byte(apiKey)) != 1 {
 		h.respondError(w, http.StatusUnauthorized, "Invalid API key")
 		return
 	}

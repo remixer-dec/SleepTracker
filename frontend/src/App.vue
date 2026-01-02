@@ -25,7 +25,7 @@
     </div>
 
     <div v-else-if="!authStore.isLoading && habitsStore.habits.length === 0" class="empty-state">
-      <p class="text-muted">{{ t('habits.noHabits') }}</p>
+      <p class="text-muted" v-cloak>{{ t('habits.noHabits') }}</p>
       <button v-if="authStore.isOwner" class="btn btn-primary mt-md" @click="openHabitModal(null)">
         {{ t('habits.addFirst') }}
       </button>
@@ -245,6 +245,9 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+v-cloak {
+  display: none;
+}
 .main-content {
   flex: 1;
   display: flex;

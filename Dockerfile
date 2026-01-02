@@ -23,7 +23,5 @@ COPY --from=frontend-builder /app/frontend/dist /app/static
 
 EXPOSE 8080
 
-VOLUME ["/app/data"]
-
 ENTRYPOINT ["/app/sleeptracker"]
 CMD ["-port", "8080", "-db", "/app/data/sleeptracker.db", "-static", "/app/static"]

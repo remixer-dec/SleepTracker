@@ -1,71 +1,87 @@
 <template>
   <div class="streak-display glass-card">
-    <div class="fire-container" v-if="!isAntiStreak && streak >= 2" :style="fireContainerStyle">
+    <div
+      class="fire-container"
+      v-if="!isAntiStreak && streak >= 2"
+      :style="fireContainerStyle"
+    >
       <FireAnimation :intensity="fireIntensity" />
     </div>
 
     <div class="streak-main">
-      <div class="streak-label">{{ isAntiStreak ? t('streak.antiStreak') : t('streak.current') }}</div>
+      <div class="streak-label">
+        {{ isAntiStreak ? t("streak.antiStreak") : t("streak.current") }}
+      </div>
       <div class="streak-value" :class="{ 'anti-streak': isAntiStreak }">
-        <span v-if="isAntiStreak" class="rage-icon">😤</span>
         {{ Math.abs(streak) }}
       </div>
-      <div class="streak-unit">{{ t('streak.days') }}</div>
-      <div class="level-badge">{{ t('streak.level') }} {{ level.level }}</div>
+      <div class="streak-unit">{{ t("streak.days") }}</div>
+      <div class="level-badge">{{ t("streak.level") }} {{ level.level }}</div>
     </div>
 
     <div class="streak-stats">
       <div class="stat">
         <div class="stat-value">{{ record }}</div>
-        <div class="stat-label">{{ t('streak.record') }}</div>
+        <div class="stat-label">{{ t("streak.record") }}</div>
       </div>
       <div class="stat">
         <div class="stat-value">{{ weeklyStreaks }}</div>
-        <div class="stat-label">{{ t('streak.weekly') }}</div>
+        <div class="stat-label">{{ t("streak.weekly") }}</div>
       </div>
     </div>
 
     <div class="level-progress">
       <div class="level-bar">
-        <div class="level-fill" :style="{ width: (level.progress * 100) + '%' }"></div>
+        <div
+          class="level-fill"
+          :style="{ width: level.progress * 100 + '%' }"
+        ></div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { getFireIntensity } from '../utils/calculations.js'
-import FireAnimation from './FireAnimation.vue'
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
+import { getFireIntensity } from "../utils/calculations.js";
+import FireAnimation from "./FireAnimation.vue";
 
-const { t } = useI18n()
+const { t } = useI18n();
 
 const props = defineProps({
   streak: {
     type: Number,
-    default: 0
+    default: 0,
   },
   record: {
     type: Number,
-    default: 0
+    default: 0,
   },
   weeklyStreaks: {
     type: Number,
-    default: 0
+    default: 0,
   },
   level: {
     type: Object,
-    default: () => ({ level: 1, progress: 0 })
-  }
-})
+    default: () => ({ level: 1, progress: 0 }),
+  },
+});
 
-const isAntiStreak = computed(() => props.streak < 0)
-const fireIntensity = computed(() => getFireIntensity(props.streak))
+const isAntiStreak = computed(() => props.streak < 0);
+const fireIntensity = computed(() => getFireIntensity(props.streak));
 const fireContainerStyle = computed(() => {
-  const scale = Math.min(1 + (props.streak / 10) * 0.5, 1.5)
-  return { transform: `translateX(-50%) scale(${scale})` }
-})
+  const scale = Math.min(1 + props.streak / 10, 10);
+  const filter =
+    props.streak > 10
+      ? `saturate(${Math.min(100 + (props.streak - 10) * 9, 1000)}%)`
+      : "saturate(100%)";
+
+  return {
+    transform: `translateX(-50%) scale(${scale})`,
+    filter,
+  };
+});
 </script>
 
 <style scoped>
@@ -101,7 +117,7 @@ const fireContainerStyle = computed(() => {
 .streak-value {
   font-size: var(--font-size-huge);
   font-weight: 700;
-  color: var(--color-success);
+  color: var(--color-text);
   line-height: 1;
   margin: var(--spacing-xs) 0;
 }
@@ -117,13 +133,17 @@ const fireContainerStyle = computed(() => {
 }
 
 @keyframes ragePulse {
-  from { transform: scale(1); }
-  to { transform: scale(1.1); }
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
 }
 
 .streak-unit {
   font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
+  color: var(--color-text);
 }
 
 .level-badge {
@@ -141,7 +161,7 @@ const fireContainerStyle = computed(() => {
 
 .streak-stats {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   gap: var(--spacing-xl);
   margin: var(--spacing-md) 0;
   position: relative;
@@ -178,7 +198,11 @@ const fireContainerStyle = computed(() => {
 
 .level-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-soft));
+  background: linear-gradient(
+    90deg,
+    var(--color-accent),
+    var(--color-accent-soft)
+  );
   border-radius: 2px;
   transition: width 0.3s ease;
 }

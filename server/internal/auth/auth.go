@@ -24,10 +24,13 @@ type Auth struct {
 	secretKey []byte
 }
 
-func New(secretKey string) *Auth {
+func New(secretKey string) (*Auth, error) {
+	if len(secretKey) < 32 {
+		return nil, errors.New("secret key is too short; use at least 32 characters")
+	}
 	return &Auth{
 		secretKey: []byte(secretKey),
-	}
+	}, nil
 }
 
 func GenerateSecretKey() (string, error) {
@@ -55,13 +58,18 @@ func GenerateUserID() (string, error) {
 }
 
 func (a *Auth) GenerateToken(userID string, isOwner bool) (string, error) {
+	now := time.Now() // Capture time once to ensure consistency
+
 	claims := Claims{
 		UserID:  userID,
 		IsOwner: isOwner,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(365 * 24 * time.Hour)),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-			NotBefore: jwt.NewNumericDate(time.Now()),
+			ExpiresAt: jwt.NewNumericDate(now.Add(365 * 24 * time.Hour)),
+			IssuedAt:  jwt.NewNumericDate(now),
+
+			// FIX: Allow token to be valid 5 seconds in the past to handle
+			// immediate verification or slight clock drift.
+			NotBefore: jwt.NewNumericDate(now.Add(-5 * time.Second)),
 		},
 	}
 

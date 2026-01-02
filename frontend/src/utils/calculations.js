@@ -190,45 +190,46 @@ export function calculateStreak(entries, habit) {
 }
 
 export function calculateWeeklyStreaks(entries, habit) {
-  if (!entries || entries.length === 0) return 0
+  if (!entries || entries.length === 0) return 0;
 
-  const now = new Date()
-  let weeklyStreaks = 0
+  const now = new Date();
+  let currentStreak = 0;
+  
+  const day = now.getDay();
+  const diff = now.getDate() - (day === 0 ? 6 : day - 1);
+  let currentWeekStart = new Date(now.setDate(diff));
+  currentWeekStart.setHours(0, 0, 0, 0);
 
-  // Find first Monday of the year
-  const yearStart = new Date(now.getFullYear(), 0, 1)
-  const dayOfWeek = yearStart.getDay()
-  const daysToMonday = dayOfWeek === 0 ? 1 : (dayOfWeek === 1 ? 0 : 8 - dayOfWeek)
-  const firstMonday = addDays(yearStart, daysToMonday)
-
-  for (let week = 0; week < 53; week++) {
-    const weekStart = addDays(firstMonday, week * 7)
-    const weekEnd = addDays(weekStart, 6)
-
-    if (weekEnd > now) break
-
-    let allGreen = true
-    let hasAnyEntry = false
+  while (true) {
+    let allGreen = true;
+    let hasAnyEntry = false;
 
     for (let d = 0; d < 7; d++) {
-      const date = formatDate(addDays(weekStart, d))
-      const entry = entries.find(e => e.date === date)
-      if (entry) {
-        hasAnyEntry = true
-        if (!isGreenValue(entry.value, habit)) {
-          allGreen = false
-        }
+      const dateToCheck = new Date(currentWeekStart);
+      dateToCheck.setDate(currentWeekStart.getDate() + d);
+      
+      if (dateToCheck > new Date()) continue;
+
+      const dateStr = formatDate(dateToCheck);
+      const entry = entries.find(e => e.date === dateStr);
+
+      if (entry && isGreenValue(entry.value, habit)) {
+        hasAnyEntry = true;
       } else {
-        allGreen = false
+        allGreen = false;
+        break; 
       }
     }
 
-    if (hasAnyEntry && allGreen) {
-      weeklyStreaks++
+    if (allGreen && hasAnyEntry) {
+      currentStreak++;
+      currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+    } else {
+      break;
     }
   }
 
-  return weeklyStreaks
+  return currentStreak;
 }
 
 export function calculateLevel(stats) {

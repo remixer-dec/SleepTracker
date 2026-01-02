@@ -1,11 +1,19 @@
 services:
   sleeptracker:
     build: .
+    image: localhost/sleeptracker:latest
+    container_name: sleeptracker
     ports:
       - "8080:8080"
-    volumes:
-      - sleeptracker-data:/app/data
     restart: unless-stopped
-
-volumes:
-  sleeptracker-data:
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+#    networks: # add your custom network if you use a reverse-proxy, remove the ports section in that case
+#      - custom-network
+    volumes:
+      - ./data:/app/data

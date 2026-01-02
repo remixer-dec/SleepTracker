@@ -20,10 +20,10 @@
   --color-danger-dark: #c62828;
 
   --color-heatmap-empty: transparent;
-  --color-heatmap-low: #00695c;
-  --color-heatmap-mid: #00897b;
-  --color-heatmap-high: #26a69a;
-  --color-heatmap-max: #4db6ac;
+  --color-heatmap-low: radial-gradient(circle, #5a2b2e, #3a1417);
+  --color-heatmap-mid: radial-gradient(circle, #6a5a2f, #4a3a18);
+  --color-heatmap-high: radial-gradient(circle, #2f6a5e, #1b4a42);
+  --color-heatmap-max: radial-gradient(circle, #3cffc3, #1fa87f);
 
   --blur-amount: 12px;
   --border-radius: 12px;
@@ -49,14 +49,21 @@
   padding: 0;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   overflow: hidden;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-  background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+    sans-serif;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-dark) 0%,
+    var(--color-primary) 100%
+  );
   color: var(--color-text);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -113,6 +120,11 @@ body {
   transition: all 0.2s ease;
 }
 
+.habit-selector .custom-select {
+  opacity: 0;
+  position: absolute;
+}
+
 .custom-select:hover {
   border-color: rgba(255, 255, 255, 0.25);
 }
@@ -131,7 +143,7 @@ body {
   position: absolute;
   right: var(--spacing-md);
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(20%);
   pointer-events: none;
   color: var(--color-text-muted);
 }
@@ -190,7 +202,8 @@ button {
   color: var(--color-text);
 }
 
-input, textarea {
+input,
+textarea {
   font-family: inherit;
   padding: var(--spacing-sm) var(--spacing-md);
   background: rgba(0, 65, 78, 0.4);
@@ -202,12 +215,14 @@ input, textarea {
   transition: all 0.2s ease;
 }
 
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   border-color: var(--color-accent);
   box-shadow: 0 0 0 2px rgba(0, 180, 216, 0.2);
 }
 
-input::placeholder, textarea::placeholder {
+input::placeholder,
+textarea::placeholder {
   color: var(--color-text-dim);
 }
 
@@ -337,8 +352,12 @@ input::placeholder, textarea::placeholder {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
