@@ -12,6 +12,7 @@
     <div class="main-content" v-if="!authStore.isLoading && habitsStore.selectedHabit">
       <HabitTitle :habit="habitsStore.selectedHabit" @edit="openHabitModal(habitsStore.selectedHabit)" />
       <StreakDisplay
+        v-if="habitsStore.selectedHabit.trackStreak !== false"
         :streak="currentStreak"
         :record="longestStreak"
         :weeklyStreaks="weeklyStreaks"
@@ -118,6 +119,10 @@ function openEntryModal(date) {
 
 async function saveHabit(habitData) {
   try {
+    if (habitData.notificationsOn && 'Notification' in window && Notification.permission === 'default') {
+      await Notification.requestPermission()
+    }
+
     if (editingHabit.value) {
       await habitsStore.updateHabit(editingHabit.value.id, habitData)
     } else {
@@ -172,7 +177,7 @@ async function checkAchievements() {
 
 const notifiedToday = ref(new Set())
 
-function setupNotifications() {
+async function setupNotifications() {
   if (!('Notification' in window)) return
 
   setInterval(() => {

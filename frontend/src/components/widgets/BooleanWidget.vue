@@ -2,14 +2,22 @@
   <div class="boolean-widget">
     <button
       class="bool-btn"
-      :class="{ active: modelValue === 1 }"
+      :class="{
+        active: modelValue === 1,
+        positive: positiveValue !== 'no',
+        negative: positiveValue === 'no'
+      }"
       @click="$emit('update:modelValue', 1)"
     >
       {{ positiveLabel }}
     </button>
     <button
-      class="bool-btn negative"
-      :class="{ active: modelValue === 0 }"
+      class="bool-btn"
+      :class="{
+        active: modelValue === 0,
+        positive: positiveValue === 'no',
+        negative: positiveValue !== 'no'
+      }"
       @click="$emit('update:modelValue', 0)"
     >
       {{ negativeLabel }}
@@ -18,6 +26,7 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -30,12 +39,16 @@ defineProps({
   positiveLabel: {
     type: String,
     default: ''
+  },
+  positiveValue: {
+    type: String,
+    default: 'yes'
   }
 })
 
 defineEmits(['update:modelValue'])
 
-const negativeLabel = t('entry.no')
+const negativeLabel = computed(() => t('entry.no'))
 </script>
 
 <style scoped>
@@ -59,7 +72,7 @@ const negativeLabel = t('entry.no')
   background: rgba(255, 255, 255, 0.15);
 }
 
-.bool-btn.active {
+.bool-btn.positive.active {
   background: var(--color-success);
   color: white;
 }

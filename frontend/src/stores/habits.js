@@ -16,13 +16,22 @@ export const useHabitsStore = defineStore('habits', () => {
     return entries.value[selectedHabitId.value] || []
   })
 
+  function sortHabits(habitsList) {
+    return habitsList.sort((a, b) => {
+      if (a.priority && !b.priority) return -1
+      if (!a.priority && b.priority) return 1
+      return 0
+    })
+  }
+
   async function fetchHabits() {
     isLoading.value = true
     try {
       const data = await api.get('habits')
-      habits.value = data || []
+      habits.value = sortHabits(data || [])
       if (habits.value.length > 0 && !selectedHabitId.value) {
-        selectedHabitId.value = habits.value[0].id
+        const priorityHabit = habits.value.find(h => h.priority)
+        selectedHabitId.value = priorityHabit ? priorityHabit.id : habits.value[0].id
       }
     } catch (error) {
       console.error('Failed to fetch habits:', error)
@@ -35,6 +44,7 @@ export const useHabitsStore = defineStore('habits', () => {
     try {
       const data = await api.post('habits', habit)
       habits.value.push(data)
+      habits.value = sortHabits(habits.value)
       selectedHabitId.value = data.id
       return data
     } catch (error) {
@@ -49,6 +59,7 @@ export const useHabitsStore = defineStore('habits', () => {
       const index = habits.value.findIndex(h => h.id === id)
       if (index !== -1) {
         habits.value[index] = data
+        habits.value = sortHabits(habits.value)
       }
       return data
     } catch (error) {

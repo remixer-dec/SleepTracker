@@ -37,6 +37,24 @@ func (h *Handlers) respondError(w http.ResponseWriter, status int, message strin
 	h.respondJSON(w, status, map[string]string{"error": message})
 }
 
+func (h *Handlers) clearOtherPriorities(exceptID string) error {
+	habits, err := h.db.GetAllHabits()
+	if err != nil {
+		return err
+	}
+
+	for i := range habits {
+		if habits[i].ID != exceptID && habits[i].Priority {
+			habits[i].Priority = false
+			if err := h.db.UpdateHabit(&habits[i]); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
 func (h *Handlers) GetHabits(w http.ResponseWriter, r *http.Request) {
 	habits, err := h.db.GetAllHabits()
 	if err != nil {
@@ -69,6 +87,13 @@ func (h *Handlers) CreateHabit(w http.ResponseWriter, r *http.Request) {
 
 	habit.ID = id
 	habit.CreatedAt = time.Now()
+
+	if habit.Priority {
+		if err := h.clearOtherPriorities(id); err != nil {
+			h.respondError(w, http.StatusInternalServerError, "Failed to clear other priorities")
+			return
+		}
+	}
 
 	if err := h.db.CreateHabit(&habit); err != nil {
 		h.respondError(w, http.StatusInternalServerError, "Failed to create habit")
@@ -129,6 +154,13 @@ func (h *Handlers) UpdateHabit(w http.ResponseWriter, r *http.Request) {
 	updates.ID = existing.ID
 	updates.Type = existing.Type
 	updates.CreatedAt = existing.CreatedAt
+
+	if updates.Priority {
+		if err := h.clearOtherPriorities(id); err != nil {
+			h.respondError(w, http.StatusInternalServerError, "Failed to clear other priorities")
+			return
+		}
+	}
 
 	if err := h.db.UpdateHabit(&updates); err != nil {
 		h.respondError(w, http.StatusInternalServerError, "Failed to update habit")

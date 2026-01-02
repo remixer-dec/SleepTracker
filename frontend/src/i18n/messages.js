@@ -18,6 +18,8 @@ export default {
       positiveValue: 'Positive value label',
       saveProgress: 'Save progress',
       resetOnStreakBreak: 'Reset on streak break',
+      trackStreak: 'Track streak',
+      priority: 'Show as default on the main page',
       notifications: 'Notifications',
       notificationTime: 'Notification time',
       types: {
@@ -139,6 +141,8 @@ export default {
       positiveValue: 'Etiqueta de valor positivo',
       saveProgress: 'Guardar progreso',
       resetOnStreakBreak: 'Reiniciar al romper racha',
+      trackStreak: 'Rastrear racha',
+      priority: 'Mostrar como predeterminado en la pagina principal',
       notifications: 'Notificaciones',
       notificationTime: 'Hora de notificacion',
       types: {
@@ -260,6 +264,8 @@ export default {
       positiveValue: 'Метка положительного значения',
       saveProgress: 'Сохранять прогресс',
       resetOnStreakBreak: 'Сбросить при потере серии',
+      trackStreak: 'Отслеживать серию',
+      priority: 'Показывать по умолчанию на главной странице',
       notifications: 'Уведомления',
       notificationTime: 'Время уведомления',
       types: {

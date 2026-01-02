@@ -130,7 +130,7 @@ const displayDays = computed(() => {
   const startOffset = (firstDay.getDay() + 6) % 7;
 
   for (let i = 0; i < startOffset; i++) {
-    days.push({ date: "", inMonth: false, color: "transparent" });
+    days.push({ date: `empty-start-${i}`, inMonth: false, color: "transparent" });
   }
 
   for (let d = 1; d <= lastDay.getDate(); d++) {
@@ -154,7 +154,7 @@ const displayDays = computed(() => {
   const remaining = 7 - (days.length % 7);
   if (remaining < 7) {
     for (let i = 0; i < remaining; i++) {
-      days.push({ date: "", inMonth: false, color: "transparent" });
+      days.push({ date: `empty-end-${i}`, inMonth: false, color: "transparent" });
     }
   }
 
@@ -284,7 +284,7 @@ watch(
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 4px;
-  flex: 1;
+  align-content: start;
 }
 
 .heatmap-cell {
