@@ -1,4 +1,4 @@
-## Public habit / mood /sleep tracker service  
+## Public habit / mood / sleep tracker service  
 - 5MB Golang executable to run in a distroless container (8mb total)
 - Multiple widgets to track different stats (mood, sleep quality, hours, yes-no questions)
 - Streaks and anti-streaks, leveling system, flame animation and XP adjusted to current streak
@@ -8,7 +8,7 @@
 ```sh
 # 1) clone the repo with git clone and cd into it.
 # 2) make sure that the container can access and persist local data direcrory 
-# (it is a distroless container with nonroot user and cannot access mounts by default)
+# (it is a distroless container with nonroot user that cannot access mounts by default)
 sudo install -d -o 65532 -g 65532 -m 700 ./data
 # 3) run the compose command to build and deploy the service
 docker compose up -d
