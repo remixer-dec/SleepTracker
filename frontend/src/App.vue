@@ -119,6 +119,10 @@ function openEntryModal(date) {
 
 async function saveHabit(habitData) {
   try {
+    if (habitData.notificationsOn && 'Notification' in window && Notification.permission === 'default') {
+      await Notification.requestPermission()
+    }
+
     if (editingHabit.value) {
       await habitsStore.updateHabit(editingHabit.value.id, habitData)
     } else {
@@ -175,10 +179,6 @@ const notifiedToday = ref(new Set())
 
 async function setupNotifications() {
   if (!('Notification' in window)) return
-
-  if (Notification.permission === 'default') {
-    await Notification.requestPermission()
-  }
 
   setInterval(() => {
     const now = new Date()
