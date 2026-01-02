@@ -18,5 +18,14 @@ docker exec sleeptracker /app/sleeptracker -create-join-link
 # to deploy with existing reverse proxy modify the network and ports sections in docker-compose.yml
 ```
 
+### External API
+Third-party services can update habit values via `POST /api/external/update` with header `X-API-Key: <key>`:
+```sh
+# Set SLEEP_EXTERNAL_KEY env var before starting container
+curl -X POST https://your-domain/api/external/update \
+  -H "X-API-Key: your-key" -H "Content-Type: application/json" \
+  -d '{"habitId": "abc123", "date": "2024-01-15", "value": 8}'
+```
+
 #### Disclaimer
 Most of the code was implemented with assistance of Claude Code, I guided it to implement requested features in a way that aligns with my vision of the project and fixed the bugs that it made.

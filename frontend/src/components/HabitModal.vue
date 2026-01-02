@@ -87,6 +87,16 @@
 
       <div class="form-group">
         <div class="switch-row">
+          <label class="form-label">{{ t('habits.private') }}</label>
+          <label class="switch">
+            <input type="checkbox" v-model="form.private">
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="switch-row">
           <label class="form-label">{{ t('habits.notifications') }}</label>
           <label class="switch">
             <input type="checkbox" v-model="form.notificationsOn">
@@ -146,6 +156,7 @@ const form = ref({
   resetOnStreakBreak: false,
   trackStreak: true,
   priority: false,
+  private: false,
   notificationsOn: false,
   notificationTime: '21:00'
 })
@@ -167,6 +178,7 @@ watch(() => props.habit, (newHabit) => {
       resetOnStreakBreak: newHabit.resetOnStreakBreak || false,
       trackStreak: newHabit.trackStreak !== undefined ? newHabit.trackStreak : true,
       priority: newHabit.priority || false,
+      private: newHabit.private || false,
       notificationsOn: newHabit.notificationsOn || false,
       notificationTime: newHabit.notificationTime || '21:00'
     }
@@ -180,6 +192,7 @@ watch(() => props.habit, (newHabit) => {
       resetOnStreakBreak: false,
       trackStreak: true,
       priority: false,
+      private: false,
       notificationsOn: false,
       notificationTime: '21:00'
     }

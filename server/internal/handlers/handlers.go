@@ -64,6 +64,18 @@ func (h *Handlers) GetHabits(w http.ResponseWriter, r *http.Request) {
 	if habits == nil {
 		habits = []models.Habit{}
 	}
+
+	// Filter out private habits for non-owner users
+	if !middleware.IsOwner(r.Context()) {
+		filtered := make([]models.Habit, 0, len(habits))
+		for _, habit := range habits {
+			if !habit.Private {
+				filtered = append(filtered, habit)
+			}
+		}
+		habits = filtered
+	}
+
 	h.respondJSON(w, http.StatusOK, habits)
 }
 
@@ -117,6 +129,12 @@ func (h *Handlers) GetHabit(w http.ResponseWriter, r *http.Request) {
 	}
 	if err != nil {
 		h.respondError(w, http.StatusInternalServerError, "Failed to get habit")
+		return
+	}
+
+	// Deny access to private habits for non-owner users
+	if habit.Private && !middleware.IsOwner(r.Context()) {
+		h.respondError(w, http.StatusNotFound, "Habit not found")
 		return
 	}
 
@@ -208,8 +226,22 @@ func (h *Handlers) GetEntries(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Check if habit is private and user is not owner
+	habit, err := h.db.GetHabit(habitID)
+	if err == db.ErrNotFound {
+		h.respondError(w, http.StatusNotFound, "Habit not found")
+		return
+	}
+	if err != nil {
+		h.respondError(w, http.StatusInternalServerError, "Failed to get habit")
+		return
+	}
+	if habit.Private && !middleware.IsOwner(r.Context()) {
+		h.respondError(w, http.StatusNotFound, "Habit not found")
+		return
+	}
+
 	var entries []models.Entry
-	var err error
 
 	if startDate != "" && endDate != "" {
 		entries, err = h.db.GetEntriesByHabitAndDateRange(habitID, startDate, endDate)

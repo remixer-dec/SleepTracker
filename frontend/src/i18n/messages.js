@@ -20,6 +20,7 @@ export default {
       resetOnStreakBreak: 'Reset on streak break',
       trackStreak: 'Track streak',
       priority: 'Show as default on the main page',
+      private: 'Private',
       notifications: 'Notifications',
       notificationTime: 'Notification time',
       types: {
@@ -143,6 +144,7 @@ export default {
       resetOnStreakBreak: 'Reiniciar al romper racha',
       trackStreak: 'Rastrear racha',
       priority: 'Mostrar como predeterminado en la pagina principal',
+      private: 'Privado',
       notifications: 'Notificaciones',
       notificationTime: 'Hora de notificacion',
       types: {
@@ -266,6 +268,7 @@ export default {
       resetOnStreakBreak: 'Сбросить при потере серии',
       trackStreak: 'Отслеживать серию',
       priority: 'Показывать по умолчанию на главной странице',
+      private: 'Приватный',
       notifications: 'Уведомления',
       notificationTime: 'Время уведомления',
       types: {
