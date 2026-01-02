@@ -35,6 +35,26 @@
         />
       </div>
 
+      <div class="form-group" v-if="form.type === 'additive'">
+        <div class="switch-row">
+          <label class="form-label">{{ t('habits.saveProgress') }}</label>
+          <label class="switch">
+            <input type="checkbox" v-model="form.saveProgress">
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group" v-if="form.type === 'additive' && form.saveProgress">
+        <div class="switch-row">
+          <label class="form-label">{{ t('habits.resetOnStreakBreak') }}</label>
+          <label class="switch">
+            <input type="checkbox" v-model="form.resetOnStreakBreak">
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+      </div>
+
       <div class="form-group" v-if="form.type === 'boolean'">
         <label class="form-label">{{ t('habits.positiveValue') }}</label>
         <div class="select-wrapper">
@@ -102,6 +122,8 @@ const form = ref({
   type: 'reachable',
   goal: 8,
   positiveValue: 'yes',
+  saveProgress: false,
+  resetOnStreakBreak: false,
   notificationsOn: false,
   notificationTime: '21:00'
 })
@@ -119,6 +141,8 @@ watch(() => props.habit, (newHabit) => {
       type: newHabit.type || 'reachable',
       goal: newHabit.goal || 8,
       positiveValue: newHabit.positiveValue || 'yes',
+      saveProgress: newHabit.saveProgress || false,
+      resetOnStreakBreak: newHabit.resetOnStreakBreak || false,
       notificationsOn: newHabit.notificationsOn || false,
       notificationTime: newHabit.notificationTime || '21:00'
     }
@@ -128,6 +152,8 @@ watch(() => props.habit, (newHabit) => {
       type: 'reachable',
       goal: 8,
       positiveValue: 'yes',
+      saveProgress: false,
+      resetOnStreakBreak: false,
       notificationsOn: false,
       notificationTime: '21:00'
     }

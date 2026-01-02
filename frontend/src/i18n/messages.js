@@ -16,6 +16,8 @@ export default {
       type: 'Type',
       goal: 'Goal',
       positiveValue: 'Positive value label',
+      saveProgress: 'Save progress',
+      resetOnStreakBreak: 'Reset on streak break',
       notifications: 'Notifications',
       notificationTime: 'Notification time',
       types: {
@@ -135,6 +137,8 @@ export default {
       type: 'Tipo',
       goal: 'Meta',
       positiveValue: 'Etiqueta de valor positivo',
+      saveProgress: 'Guardar progreso',
+      resetOnStreakBreak: 'Reiniciar al romper racha',
       notifications: 'Notificaciones',
       notificationTime: 'Hora de notificacion',
       types: {
@@ -254,6 +258,8 @@ export default {
       type: 'Тип',
       goal: 'Цель',
       positiveValue: 'Метка положительного значения',
+      saveProgress: 'Сохранять прогресс',
+      resetOnStreakBreak: 'Сбросить при потере серии',
       notifications: 'Уведомления',
       notificationTime: 'Время уведомления',
       types: {
