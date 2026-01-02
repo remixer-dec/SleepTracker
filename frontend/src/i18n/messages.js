@@ -16,6 +16,8 @@ export default {
       type: 'Type',
       goal: 'Goal',
       positiveValue: 'Positive value label',
+      saveProgress: 'Save progress',
+      resetOnStreakBreak: 'Reset on streak break',
       notifications: 'Notifications',
       notificationTime: 'Notification time',
       types: {
@@ -46,6 +48,11 @@ export default {
       hours: 'hours',
       yes: 'Yes',
       no: 'No'
+    },
+    goal: {
+      reached: 'Goal reached',
+      above: 'above goal',
+      below: 'below goal'
     },
     guest: {
       viewOnly: 'View Only Mode',
@@ -130,6 +137,8 @@ export default {
       type: 'Tipo',
       goal: 'Meta',
       positiveValue: 'Etiqueta de valor positivo',
+      saveProgress: 'Guardar progreso',
+      resetOnStreakBreak: 'Reiniciar al romper racha',
       notifications: 'Notificaciones',
       notificationTime: 'Hora de notificacion',
       types: {
@@ -160,6 +169,11 @@ export default {
       hours: 'horas',
       yes: 'Si',
       no: 'No'
+    },
+    goal: {
+      reached: 'Meta alcanzada',
+      above: 'sobre la meta',
+      below: 'bajo la meta'
     },
     guest: {
       viewOnly: 'Modo Solo Lectura',
@@ -244,6 +258,8 @@ export default {
       type: 'Тип',
       goal: 'Цель',
       positiveValue: 'Метка положительного значения',
+      saveProgress: 'Сохранять прогресс',
+      resetOnStreakBreak: 'Сбросить при потере серии',
       notifications: 'Уведомления',
       notificationTime: 'Время уведомления',
       types: {
@@ -274,6 +290,11 @@ export default {
       hours: 'часов',
       yes: 'Да',
       no: 'Нет'
+    },
+    goal: {
+      reached: 'Цель достигнута',
+      above: 'выше цели',
+      below: 'ниже цели'
     },
     guest: {
       viewOnly: 'Режим просмотра',

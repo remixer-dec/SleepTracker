@@ -28,6 +28,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function join(token) {
+    isLoading.value = true
     try {
       const data = await api.post(`join?token=${token}`)
       userId.value = data.userId
@@ -40,6 +41,8 @@ export const useAuthStore = defineStore('auth', () => {
     } catch (error) {
       console.error('Join failed:', error)
       return false
+    } finally {
+      isLoading.value = false
     }
   }
 

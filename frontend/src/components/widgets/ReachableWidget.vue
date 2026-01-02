@@ -35,6 +35,9 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   modelValue: {
@@ -76,9 +79,9 @@ const valueColor = computed(() => {
 const goalText = computed(() => {
   const diff = props.modelValue - props.goal
   if (diff >= 0) {
-    return diff > 0 ? `+${diff} above goal` : 'Goal reached'
+    return diff > 0 ? `+${diff} ${t('goal.above')}` : t('goal.reached')
   }
-  return `${Math.abs(diff)} below goal`
+  return `${Math.abs(diff)} ${t('goal.below')}`
 })
 </script>
 

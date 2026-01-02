@@ -32,6 +32,8 @@
           v-else-if="habit.type === 'additive'"
           v-model="form.value"
           :goal="habit.goal || 10"
+          :accumulated="accumulatedProgress"
+          :saveProgress="habit.saveProgress"
         />
 
         <MoodWidget
@@ -73,6 +75,8 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useHabitsStore } from '../stores/habits.js'
+import { calculateAccumulatedProgress } from '../utils/calculations.js'
 import BooleanWidget from './widgets/BooleanWidget.vue'
 import ReachableWidget from './widgets/ReachableWidget.vue'
 import NumberWidget from './widgets/NumberWidget.vue'
@@ -82,6 +86,7 @@ import MoodWidget from './widgets/MoodWidget.vue'
 import RatingWidget from './widgets/RatingWidget.vue'
 
 const { t, locale } = useI18n()
+const habitsStore = useHabitsStore()
 
 const props = defineProps({
   habit: {
@@ -114,6 +119,12 @@ const formattedDate = computed(() => {
     month: 'long',
     day: 'numeric'
   })
+})
+
+const accumulatedProgress = computed(() => {
+  if (props.habit.type !== 'additive' || !props.habit.saveProgress) return 0
+  const entries = habitsStore.entries[props.habit.id] || []
+  return calculateAccumulatedProgress(entries, props.habit, props.date)
 })
 
 function getDefaultValue() {

@@ -70,7 +70,7 @@ func main() {
 		}
 
 		fmt.Printf("Join token created: %s\n", token)
-		fmt.Printf("Use: /api/join?token=%s\n", token)
+		fmt.Printf("Use: /join?token=%s\n", token)
 		return
 	}
 

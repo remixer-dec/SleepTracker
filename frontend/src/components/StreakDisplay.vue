@@ -1,6 +1,6 @@
 <template>
   <div class="streak-display glass-card">
-    <div class="fire-container" v-if="!isAntiStreak && streak > 0">
+    <div class="fire-container" v-if="!isAntiStreak && streak >= 2" :style="fireContainerStyle">
       <FireAnimation :intensity="fireIntensity" />
     </div>
 
@@ -61,6 +61,10 @@ const props = defineProps({
 
 const isAntiStreak = computed(() => props.streak < 0)
 const fireIntensity = computed(() => getFireIntensity(props.streak))
+const fireContainerStyle = computed(() => {
+  const scale = Math.min(1 + (props.streak / 10) * 0.5, 1.5)
+  return { transform: `translateX(-50%) scale(${scale})` }
+})
 </script>
 
 <style scoped>
@@ -75,9 +79,9 @@ const fireIntensity = computed(() => getFireIntensity(props.streak))
   position: absolute;
   bottom: 0;
   left: 50%;
-  transform: translateX(-50%);
   pointer-events: none;
   z-index: 0;
+  transform-origin: bottom center;
 }
 
 .streak-main {
@@ -131,6 +135,7 @@ const fireIntensity = computed(() => getFireIntensity(props.streak))
 
 .stat {
   text-align: center;
+  min-width: 80px;
 }
 
 .stat-value {

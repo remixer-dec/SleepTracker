@@ -29,7 +29,7 @@ export function isGreenValue(value, habit) {
 
   switch (habit.type) {
     case 'boolean':
-      return value === 1
+      return habit.positiveValue === 'no' ? value === 0 : value === 1
     case 'reachable':
       return value >= (habit.goal || 0)
     case 'number':
@@ -255,6 +255,51 @@ export function calculateXP(stats) {
   return xp
 }
 
+export function calculateAccumulatedProgress(entries, habit, currentDate) {
+  if (!habit.saveProgress || habit.type !== 'additive') return 0
+
+  const goal = habit.goal || 10
+  const sortedEntries = [...entries].sort((a, b) =>
+    parseDate(b.date).getTime() - parseDate(a.date).getTime()
+  )
+
+  let accumulated = 0
+  let checkDate = formatDate(addDays(parseDate(currentDate), -1))
+  let foundBreak = false
+
+  while (!foundBreak) {
+    const entry = sortedEntries.find(e => e.date === checkDate)
+
+    if (!entry) {
+      if (habit.resetOnStreakBreak) {
+        break
+      }
+      const prevDate = formatDate(addDays(parseDate(checkDate), -1))
+      const prevEntry = sortedEntries.find(e => e.date === prevDate)
+      if (!prevEntry) break
+      checkDate = prevDate
+      continue
+    }
+
+    const entryValue = entry.value || 0
+    accumulated += entryValue
+
+    if (accumulated >= goal) {
+      accumulated = 0
+      break
+    }
+
+    if (habit.resetOnStreakBreak && entryValue === 0) {
+      accumulated = 0
+      break
+    }
+
+    checkDate = formatDate(addDays(parseDate(checkDate), -1))
+  }
+
+  return accumulated
+}
+
 export function getFireIntensity(streak) {
   if (streak <= 0) return 0
   if (streak < 3) return 0.3
@@ -265,8 +310,7 @@ export function getFireIntensity(streak) {
 }
 
 export function calculateStats(entries, habits, achievements) {
-  const totalEntries = entries.reduce((sum, habitEntries) => sum + habitEntries.length, 0)
-
+  let totalEntries = 0
   let longestStreak = 0
   let currentStreak = 0
   let weeklyStreaks = 0
@@ -275,6 +319,7 @@ export function calculateStats(entries, habits, achievements) {
 
   habits.forEach((habit, index) => {
     const habitEntries = entries[index] || []
+    totalEntries += habitEntries.filter(e => isGreenValue(e.value, habit)).length
     const streak = calculateStreak(habitEntries, habit)
     longestStreak = Math.max(longestStreak, streak.longest)
     if (!streak.isAntiStreak) {
