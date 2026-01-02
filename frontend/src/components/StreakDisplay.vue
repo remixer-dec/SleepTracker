@@ -7,6 +7,7 @@
     <div class="streak-main">
       <div class="streak-label">{{ isAntiStreak ? t('streak.antiStreak') : t('streak.current') }}</div>
       <div class="streak-value" :class="{ 'anti-streak': isAntiStreak }">
+        <span v-if="isAntiStreak" class="rage-icon">😤</span>
         {{ Math.abs(streak) }}
       </div>
       <div class="streak-unit">{{ t('streak.days') }}</div>
@@ -109,6 +110,17 @@ const fireContainerStyle = computed(() => {
   color: var(--color-danger);
 }
 
+.rage-icon {
+  font-size: 0.6em;
+  margin-right: var(--spacing-xs);
+  animation: ragePulse 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes ragePulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
 .streak-unit {
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
@@ -118,10 +130,13 @@ const fireContainerStyle = computed(() => {
   display: inline-block;
   margin-top: var(--spacing-xs);
   padding: 2px var(--spacing-sm);
-  background: rgba(0, 180, 216, 0.2);
+  background: rgba(0, 26, 32, 0.8);
   border-radius: 12px;
   font-size: var(--font-size-xs);
   color: var(--color-accent);
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .streak-stats {

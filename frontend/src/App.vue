@@ -90,7 +90,7 @@ const streakInfo = computed(() => {
 
 const currentStreak = computed(() => streakInfo.value.current)
 const longestStreak = computed(() => streakInfo.value.longest)
-const showAntiStreakBackground = computed(() => streakInfo.value.isAntiStreak && streakInfo.value.current < -2)
+const showAntiStreakBackground = computed(() => streakInfo.value.isAntiStreak)
 
 const weeklyStreaks = computed(() => {
   if (!habitsStore.selectedHabit || !habitsStore.currentEntries) return 0

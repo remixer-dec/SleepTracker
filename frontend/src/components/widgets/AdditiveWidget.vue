@@ -23,7 +23,8 @@
           @input="updateValue($event.target.value)"
           min="0"
         />
-        <span class="goal-text">/ {{ goal }}</span>
+        <span class="goal-text" v-if="saveProgress && accumulated > 0">+ {{ accumulated }} = {{ totalValue }}/{{ goal }}</span>
+        <span class="goal-text" v-else>/ {{ goal }}</span>
       </div>
       <button class="adjust-btn" @click="increment">+</button>
     </div>
