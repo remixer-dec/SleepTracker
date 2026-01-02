@@ -29,7 +29,7 @@ export function isGreenValue(value, habit) {
 
   switch (habit.type) {
     case 'boolean':
-      return value === 1
+      return habit.positiveValue === 'no' ? value === 0 : value === 1
     case 'reachable':
       return value >= (habit.goal || 0)
     case 'number':

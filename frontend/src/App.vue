@@ -170,6 +170,42 @@ async function checkAchievements() {
   await achievementsStore.checkAndUnlockAchievements(stats)
 }
 
+const notifiedToday = ref(new Set())
+
+function setupNotifications() {
+  if (!('Notification' in window)) return
+
+  setInterval(() => {
+    const now = new Date()
+    const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
+    const today = formatDate(now)
+
+    habitsStore.habits.forEach(habit => {
+      if (!habit.notificationsOn || !habit.notificationTime) return
+      if (notifiedToday.value.has(`${habit.id}-${today}`)) return
+
+      if (habit.notificationTime === currentTime) {
+        const entry = habitsStore.getEntryByDate(habit.id, today)
+        if (!entry) {
+          sendNotification(habit.name, t('habits.reminderMessage') || `Don't forget to log your ${habit.name}!`)
+          notifiedToday.value.add(`${habit.id}-${today}`)
+        }
+      }
+    })
+  }, 60000)
+}
+
+async function sendNotification(title, body) {
+  if (Notification.permission === 'granted') {
+    new Notification(title, { body, icon: '/favicon.svg' })
+  } else if (Notification.permission !== 'denied') {
+    const permission = await Notification.requestPermission()
+    if (permission === 'granted') {
+      new Notification(title, { body, icon: '/favicon.svg' })
+    }
+  }
+}
+
 watch(() => habitsStore.selectedHabitId, async (newId) => {
   if (newId) {
     const today = new Date()
@@ -203,6 +239,8 @@ onMounted(async () => {
       formatDate(today)
     )
   }
+
+  setupNotifications()
 })
 </script>
 

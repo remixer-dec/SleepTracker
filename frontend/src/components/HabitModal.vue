@@ -37,12 +37,12 @@
 
       <div class="form-group" v-if="form.type === 'boolean'">
         <label class="form-label">{{ t('habits.positiveValue') }}</label>
-        <input
-          v-model="form.positiveValue"
-          type="text"
-          class="form-input"
-          :placeholder="t('entry.yes')"
-        />
+        <div class="select-wrapper">
+          <select v-model="form.positiveValue" class="custom-select form-input">
+            <option value="yes">{{ t('entry.yes') }}</option>
+            <option value="no">{{ t('entry.no') }}</option>
+          </select>
+        </div>
       </div>
 
       <div class="form-group">
@@ -101,7 +101,7 @@ const form = ref({
   name: '',
   type: 'reachable',
   goal: 8,
-  positiveValue: '',
+  positiveValue: 'yes',
   notificationsOn: false,
   notificationTime: '21:00'
 })
@@ -118,7 +118,7 @@ watch(() => props.habit, (newHabit) => {
       name: newHabit.name || '',
       type: newHabit.type || 'reachable',
       goal: newHabit.goal || 8,
-      positiveValue: newHabit.positiveValue || '',
+      positiveValue: newHabit.positiveValue || 'yes',
       notificationsOn: newHabit.notificationsOn || false,
       notificationTime: newHabit.notificationTime || '21:00'
     }
@@ -127,7 +127,7 @@ watch(() => props.habit, (newHabit) => {
       name: '',
       type: 'reachable',
       goal: 8,
-      positiveValue: '',
+      positiveValue: 'yes',
       notificationsOn: false,
       notificationTime: '21:00'
     }
