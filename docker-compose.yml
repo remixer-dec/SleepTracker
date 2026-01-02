@@ -5,6 +5,7 @@ services:
     container_name: sleeptracker
     ports:
       - "8080:8080"
+    pull_policy: never
     restart: unless-stopped
     cap_drop:
       - ALL
@@ -13,7 +14,29 @@ services:
     dns:
       - 8.8.8.8
       - 1.1.1.1
-#    networks: # add your custom network if you use a reverse-proxy, remove the ports section in that case
-#      - custom-network
     volumes:
       - ./data:/app/data
+#    networks: # add your custom network if you use a reverse-proxy, remove the ports section in that case
+#      - custom-network
+
+  tg_sleep_monitor:
+    build:
+      context: ./automation/tg_monitor
+      dockerfile: Dockerfile
+    pull_policy: never
+    profiles:
+      - tgmon
+    image: localhost/sleep_tgmonitor:latest
+    container_name: tg_sleep_monitor
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+    environment:
+      - TZ=Europe/Berlin
+      - SAFE_WAKE_HOUR=16
+      - PYTHONUNBUFFERED=1
+      # set other variables here
+
+# networks: # uncomment this section if you want to attach this to your network with reverse proxy
+#  custom-network:
+#    external: true

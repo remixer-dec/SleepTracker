@@ -15,7 +15,7 @@ docker compose up -d
 # 4) to log in, run this command to create a link
 docker exec sleeptracker /app/sleeptracker -create-join-link
 # visit the link to log in
-# to deploy with existing reverse proxy modify the network and ports sections in docker-compose.yml
+# to deploy with existing reverse proxy modify the network, networkS and ports sections in docker-compose.yml
 ```
 
 ### External API
@@ -26,6 +26,7 @@ curl -X POST https://your-domain/api/external/update \
   -H "X-API-Key: your-key" -H "Content-Type: application/json" \
   -d '{"habitId": "abc123", "date": "2024-01-15", "value": 8}'
 ```
+This project also includes tg monitoring service that can be enabled with --profile tgmon in docker compose command
 
 #### Disclaimer
 Most of the code was implemented with assistance of Claude Code, I guided it to implement requested features in a way that aligns with my vision of the project and fixed the bugs that it made.
