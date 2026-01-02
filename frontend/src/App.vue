@@ -244,4 +244,16 @@ onMounted(async () => {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.rage-background {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(198, 40, 40, 0.3) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.4;
+}
 </style>

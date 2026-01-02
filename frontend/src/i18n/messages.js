@@ -47,6 +47,11 @@ export default {
       yes: 'Yes',
       no: 'No'
     },
+    goal: {
+      reached: 'Goal reached',
+      above: 'above goal',
+      below: 'below goal'
+    },
     guest: {
       viewOnly: 'View Only Mode',
       loginRequired: 'Login required to edit'
@@ -161,6 +166,11 @@ export default {
       yes: 'Si',
       no: 'No'
     },
+    goal: {
+      reached: 'Meta alcanzada',
+      above: 'sobre la meta',
+      below: 'bajo la meta'
+    },
     guest: {
       viewOnly: 'Modo Solo Lectura',
       loginRequired: 'Inicio de sesion requerido para editar'
@@ -274,6 +284,11 @@ export default {
       hours: 'часов',
       yes: 'Да',
       no: 'Нет'
+    },
+    goal: {
+      reached: 'Цель достигнута',
+      above: 'выше цели',
+      below: 'ниже цели'
     },
     guest: {
       viewOnly: 'Режим просмотра',

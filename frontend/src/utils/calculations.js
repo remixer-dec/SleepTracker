@@ -265,8 +265,7 @@ export function getFireIntensity(streak) {
 }
 
 export function calculateStats(entries, habits, achievements) {
-  const totalEntries = entries.reduce((sum, habitEntries) => sum + habitEntries.length, 0)
-
+  let totalEntries = 0
   let longestStreak = 0
   let currentStreak = 0
   let weeklyStreaks = 0
@@ -275,6 +274,7 @@ export function calculateStats(entries, habits, achievements) {
 
   habits.forEach((habit, index) => {
     const habitEntries = entries[index] || []
+    totalEntries += habitEntries.filter(e => isGreenValue(e.value, habit)).length
     const streak = calculateStreak(habitEntries, habit)
     longestStreak = Math.max(longestStreak, streak.longest)
     if (!streak.isAntiStreak) {

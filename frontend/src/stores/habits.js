@@ -35,9 +35,7 @@ export const useHabitsStore = defineStore('habits', () => {
     try {
       const data = await api.post('habits', habit)
       habits.value.push(data)
-      if (!selectedHabitId.value) {
-        selectedHabitId.value = data.id
-      }
+      selectedHabitId.value = data.id
       return data
     } catch (error) {
       console.error('Failed to create habit:', error)

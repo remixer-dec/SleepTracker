@@ -55,6 +55,7 @@ const selectedId = computed({
   display: flex;
   gap: var(--spacing-sm);
   align-items: center;
+  width: 100%;
 }
 
 .select-wrapper {

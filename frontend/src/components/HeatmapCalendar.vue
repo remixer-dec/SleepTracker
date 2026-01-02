@@ -36,6 +36,7 @@
             'has-entry': day.hasEntry
           }"
           :style="{ backgroundColor: day.color }"
+          :title="day.hasEntry ? formatTooltip(day) : ''"
           @click="handleCellClick(day)"
         >
           <span class="cell-day" v-if="day.inMonth">{{ day.dayNumber }}</span>
@@ -85,7 +86,7 @@ const isCurrentMonth = computed(() => {
 
 const weekdayLabels = computed(() => {
   const days = []
-  const baseDate = new Date(2024, 0, 7)
+  const baseDate = new Date(2024, 0, 1) // Monday, January 1, 2024
   for (let i = 0; i < 7; i++) {
     const date = new Date(baseDate)
     date.setDate(date.getDate() + i)
@@ -167,6 +168,22 @@ function handleCellClick(day) {
   if (day.inMonth) {
     emit('select-date', day.date)
   }
+}
+
+function formatTooltip(day) {
+  if (!day.hasEntry) return ''
+  const value = day.value
+  if (props.habit.type === 'boolean') {
+    return value ? t('entry.yes') : t('entry.no')
+  }
+  if (props.habit.type === 'mood') {
+    const moods = ['😢', '😐', '😄']
+    return moods[Math.min(Math.max(value - 1, 0), 2)]
+  }
+  if (props.habit.type === 'rating') {
+    return '★'.repeat(value)
+  }
+  return String(value)
 }
 
 function handleTouchStart(e) {
@@ -271,7 +288,7 @@ watch(() => props.habit?.id, () => {
 }
 
 .heatmap-cell.today {
-  box-shadow: inset 0 0 0 2px var(--color-accent);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.6);
 }
 
 .cell-day {
