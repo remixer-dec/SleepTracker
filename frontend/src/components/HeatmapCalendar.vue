@@ -178,7 +178,7 @@ function formatTooltip(day) {
   }
   if (props.habit.type === 'mood') {
     const moods = ['😢', '😐', '😄']
-    return moods[Math.min(Math.max(value - 1, 0), 2)]
+    return moods[Math.min(Math.max(value, 0), 2)]
   }
   if (props.habit.type === 'rating') {
     return '★'.repeat(value)
