@@ -193,11 +193,16 @@ export function calculateWeeklyStreaks(entries, habit) {
   if (!entries || entries.length === 0) return 0
 
   const now = new Date()
-  const yearStart = new Date(now.getFullYear(), 0, 1)
   let weeklyStreaks = 0
 
-  for (let week = 0; week < 52; week++) {
-    const weekStart = addDays(yearStart, week * 7)
+  // Find first Monday of the year
+  const yearStart = new Date(now.getFullYear(), 0, 1)
+  const dayOfWeek = yearStart.getDay()
+  const daysToMonday = dayOfWeek === 0 ? 1 : (dayOfWeek === 1 ? 0 : 8 - dayOfWeek)
+  const firstMonday = addDays(yearStart, daysToMonday)
+
+  for (let week = 0; week < 53; week++) {
+    const weekStart = addDays(firstMonday, week * 7)
     const weekEnd = addDays(weekStart, 6)
 
     if (weekEnd > now) break
