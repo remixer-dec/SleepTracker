@@ -24,6 +24,7 @@ type Habit struct {
 	ResetOnStreakBreak bool      `json:"resetOnStreakBreak"`
 	TrackStreak        bool      `json:"trackStreak"`
 	Priority           bool      `json:"priority"`
+	Private            bool      `json:"private"`
 	NotificationsOn    bool      `json:"notificationsOn"`
 	NotificationTime   string    `json:"notificationTime,omitempty"`
 	CreatedAt          time.Time `json:"createdAt"`
