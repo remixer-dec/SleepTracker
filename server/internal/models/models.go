@@ -15,16 +15,19 @@ const (
 )
 
 type Habit struct {
-	ID                string    `json:"id"`
-	Name              string    `json:"name"`
-	Type              HabitType `json:"type"`
-	Goal              float64   `json:"goal,omitempty"`
-	PositiveValue     string    `json:"positiveValue,omitempty"`
-	NotificationsOn   bool      `json:"notificationsOn"`
-	NotificationTime  string    `json:"notificationTime,omitempty"`
-	CreatedAt         time.Time `json:"createdAt"`
-	Order             int       `json:"order"`
-	ExternalSourceID  string    `json:"externalSourceId,omitempty"`
+	ID                 string    `json:"id"`
+	Name               string    `json:"name"`
+	Type               HabitType `json:"type"`
+	Goal               float64   `json:"goal,omitempty"`
+	PositiveValue      string    `json:"positiveValue,omitempty"`
+	SaveProgress       bool      `json:"saveProgress"`
+	ResetOnStreakBreak bool      `json:"resetOnStreakBreak"`
+	TrackStreak        bool      `json:"trackStreak"`
+	NotificationsOn    bool      `json:"notificationsOn"`
+	NotificationTime   string    `json:"notificationTime,omitempty"`
+	CreatedAt          time.Time `json:"createdAt"`
+	Order              int       `json:"order"`
+	ExternalSourceID   string    `json:"externalSourceId,omitempty"`
 }
 
 type Entry struct {

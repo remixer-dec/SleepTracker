@@ -8,7 +8,8 @@
         <BooleanWidget
           v-if="habit.type === 'boolean'"
           v-model="form.value"
-          :positiveLabel="habit.positiveValue || t('entry.yes')"
+          :positiveLabel="t('entry.yes')"
+          :positiveValue="habit.positiveValue || 'yes'"
         />
 
         <ReachableWidget

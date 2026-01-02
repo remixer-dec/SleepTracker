@@ -67,6 +67,16 @@
 
       <div class="form-group">
         <div class="switch-row">
+          <label class="form-label">{{ t('habits.trackStreak') }}</label>
+          <label class="switch">
+            <input type="checkbox" v-model="form.trackStreak">
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="switch-row">
           <label class="form-label">{{ t('habits.notifications') }}</label>
           <label class="switch">
             <input type="checkbox" v-model="form.notificationsOn">
@@ -124,6 +134,7 @@ const form = ref({
   positiveValue: 'yes',
   saveProgress: false,
   resetOnStreakBreak: false,
+  trackStreak: true,
   notificationsOn: false,
   notificationTime: '21:00'
 })
@@ -143,6 +154,7 @@ watch(() => props.habit, (newHabit) => {
       positiveValue: newHabit.positiveValue || 'yes',
       saveProgress: newHabit.saveProgress || false,
       resetOnStreakBreak: newHabit.resetOnStreakBreak || false,
+      trackStreak: newHabit.trackStreak !== undefined ? newHabit.trackStreak : true,
       notificationsOn: newHabit.notificationsOn || false,
       notificationTime: newHabit.notificationTime || '21:00'
     }
@@ -154,6 +166,7 @@ watch(() => props.habit, (newHabit) => {
       positiveValue: 'yes',
       saveProgress: false,
       resetOnStreakBreak: false,
+      trackStreak: true,
       notificationsOn: false,
       notificationTime: '21:00'
     }

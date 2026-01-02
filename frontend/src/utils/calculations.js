@@ -29,7 +29,7 @@ export function isGreenValue(value, habit) {
 
   switch (habit.type) {
     case 'boolean':
-      return habit.positiveValue === 'no' ? value === 0 : value === 1
+      return (habit.positiveValue || 'yes') === 'no' ? value === 0 : value === 1
     case 'reachable':
       return value >= (habit.goal || 0)
     case 'number':
@@ -37,6 +37,9 @@ export function isGreenValue(value, habit) {
     case 'percentage':
       return value >= 70
     case 'additive':
+      if (habit.saveProgress) {
+        return value > 0
+      }
       return value >= (habit.goal || 0)
     case 'mood':
       return value >= 2
@@ -73,7 +76,7 @@ function getGoodnessLevel(value, habit) {
 
   switch (habit.type) {
     case 'boolean':
-      return value === 1 ? 1 : 0
+      return +isGreenValue(value, habit)
     case 'reachable': {
       const goal = habit.goal || 8
       if (value >= goal + 2) return 1
@@ -96,7 +99,7 @@ function getBadnessLevel(value, habit) {
 
   switch (habit.type) {
     case 'boolean':
-      return value === 0 ? 1 : 0
+      return +!isGreenValue(value, habit)
     case 'reachable': {
       const goal = habit.goal || 8
       if (value === 0) return 1
@@ -114,7 +117,7 @@ function getBadnessLevel(value, habit) {
 }
 
 export function calculateStreak(entries, habit) {
-  if (!entries || entries.length === 0) {
+  if (!entries || entries.length === 0 || habit.trackStreak === false) {
     return { current: 0, longest: 0, isAntiStreak: false }
   }
 

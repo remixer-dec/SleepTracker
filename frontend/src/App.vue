@@ -12,6 +12,7 @@
     <div class="main-content" v-if="!authStore.isLoading && habitsStore.selectedHabit">
       <HabitTitle :habit="habitsStore.selectedHabit" @edit="openHabitModal(habitsStore.selectedHabit)" />
       <StreakDisplay
+        v-if="habitsStore.selectedHabit.trackStreak !== false"
         :streak="currentStreak"
         :record="longestStreak"
         :weeklyStreaks="weeklyStreaks"
@@ -172,8 +173,12 @@ async function checkAchievements() {
 
 const notifiedToday = ref(new Set())
 
-function setupNotifications() {
+async function setupNotifications() {
   if (!('Notification' in window)) return
+
+  if (Notification.permission === 'default') {
+    await Notification.requestPermission()
+  }
 
   setInterval(() => {
     const now = new Date()
