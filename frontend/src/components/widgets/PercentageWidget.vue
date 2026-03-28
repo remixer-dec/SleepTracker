@@ -84,7 +84,7 @@ const progressColor = computed(() => {
 }
 
 .circle-bg {
-  stroke: rgba(255, 255, 255, 0.1);
+  stroke: rgba(255, 255, 255, 0.06);
 }
 
 .circle-progress {
@@ -115,7 +115,7 @@ const progressColor = computed(() => {
   width: 100%;
   height: 8px;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
   appearance: none;
   outline: none;
 }
@@ -127,6 +127,7 @@ const progressColor = computed(() => {
   border-radius: 50%;
   background: var(--color-accent);
   cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .slider::-moz-range-thumb {
@@ -136,5 +137,6 @@ const progressColor = computed(() => {
   background: var(--color-accent);
   cursor: pointer;
   border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 </style>

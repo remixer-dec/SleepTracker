@@ -113,14 +113,14 @@ function updateValue(val) {
 
 .progress-bar {
   height: 12px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  border-radius: 6px;
+  border-radius: 2px;
   transition: width 0.3s ease;
 }
 
@@ -143,15 +143,15 @@ function updateValue(val) {
 .adjust-btn {
   width: 48px;
   height: 48px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
   color: var(--color-text);
   font-size: var(--font-size-xl);
   font-weight: 300;
 }
 
 .adjust-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .value-info {

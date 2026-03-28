@@ -32,19 +32,19 @@ const moods = [
   {
     value: 0,
     label: 'Bad',
-    color: '#ef5350',
+    color: '#b85c5c',
     mouth: 'M15 35 Q25 28 35 35'
   },
   {
     value: 1,
     label: 'Okay',
-    color: '#ffb74d',
+    color: '#d4a054',
     mouth: 'M15 32 L35 32'
   },
   {
     value: 2,
     label: 'Good',
-    color: '#26a69a',
+    color: '#7a9a6d',
     mouth: 'M15 30 Q25 38 35 30'
   }
 ]
@@ -64,17 +64,16 @@ const moods = [
   gap: var(--spacing-sm);
   padding: var(--spacing-md);
   border-radius: var(--border-radius);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.03);
   transition: all 0.2s;
 }
 
 .mood-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .mood-btn.active {
-  background: rgba(255, 255, 255, 0.15);
-  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .mood-face {

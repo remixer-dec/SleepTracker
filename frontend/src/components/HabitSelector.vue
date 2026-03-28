@@ -76,13 +76,13 @@ const selectedId = computed({
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 65, 78, 0.4);
+  background: rgba(55, 48, 42, 0.4);
   border-radius: var(--border-radius-sm);
   position: absolute;
   top: 23px;
 }
 
 .add-btn:hover {
-  background: rgba(0, 65, 78, 0.6);
+  background: rgba(55, 48, 42, 0.6);
 }
 </style>

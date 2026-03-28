@@ -1,6 +1,6 @@
 <template>
   <svg viewBox="0 0 100 100" class="rage-emoji">
-    <circle cx="50" cy="50" r="45" fill="#c62828"/>
+    <circle cx="50" cy="50" r="45" fill="#8f4444"/>
     <g class="face">
       <path
         d="M25 35 L40 42"

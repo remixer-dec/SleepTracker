@@ -150,8 +150,8 @@ const fireContainerStyle = computed(() => {
   display: inline-block;
   margin-top: var(--spacing-xs);
   padding: 2px var(--spacing-sm);
-  background: rgba(0, 26, 32, 0.8);
-  border-radius: 12px;
+  background: rgba(30, 27, 24, 0.8);
+  border-radius: 3px;
   font-size: var(--font-size-xs);
   color: var(--color-accent);
   position: relative;
@@ -191,7 +191,7 @@ const fireContainerStyle = computed(() => {
 
 .level-bar {
   height: 4px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
   border-radius: 2px;
   overflow: hidden;
 }

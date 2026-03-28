@@ -61,7 +61,7 @@ const negativeLabel = computed(() => t('entry.no'))
   flex: 1;
   padding: var(--spacing-md);
   border-radius: var(--border-radius);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
   color: var(--color-text);
   font-size: var(--font-size-lg);
   font-weight: 500;
@@ -69,7 +69,7 @@ const negativeLabel = computed(() => t('entry.no'))
 }
 
 .bool-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .bool-btn.positive.active {

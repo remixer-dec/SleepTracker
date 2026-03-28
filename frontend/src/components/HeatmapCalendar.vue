@@ -289,21 +289,17 @@ watch(
 
 .heatmap-cell {
   aspect-ratio: 1;
-  border-radius: var(--border-radius-sm);
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition:
-    transform 0.1s,
-    box-shadow 0.1s;
+  transition: transform 0.1s;
   position: relative;
-  border-radius: 20px;
 }
 
 .heatmap-cell:not(.empty):hover {
-  transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transform: scale(1.03);
 }
 
 .heatmap-cell.empty {
@@ -312,14 +308,13 @@ watch(
 }
 
 .heatmap-cell.today {
-  box-shadow: inset 0 0 0 2px #304d53;
+  box-shadow: inset 0 0 0 1.5px rgba(194, 120, 92, 0.5);
 }
 
 .cell-day {
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   color: var(--color-text);
   opacity: 0.8;
-  font-size: 2rem;
 }
 
 .heatmap-cell.has-entry .cell-day {

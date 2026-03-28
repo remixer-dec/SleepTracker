@@ -1,33 +1,34 @@
 :root {
-  --color-primary: #002a32;
-  --color-primary-dark: #001a20;
-  --color-primary-light: #003d47;
-  --color-accent: #00b4d8;
-  --color-accent-soft: #48cae4;
+  --color-primary: #2c2825;
+  --color-primary-dark: #1e1b18;
+  --color-primary-light: #3d3632;
 
-  --color-bg: #001a20;
-  --color-bg-card: rgba(0, 42, 50, 0.6);
-  --color-bg-overlay: rgba(0, 26, 32, 0.9);
+  --color-accent: #c2785c;
+  --color-accent-soft: #d4967e;
 
-  --color-text: #e0f7fa;
-  --color-text-muted: #80deea;
-  --color-text-dim: #4db6ac;
+  --color-bg: #1e1b18;
+  --color-bg-card: rgba(55, 48, 42, 0.65);
+  --color-bg-overlay: rgba(30, 27, 24, 0.95);
 
-  --color-success: #26a69a;
-  --color-success-light: #4db6ac;
-  --color-warning: #ffb74d;
-  --color-danger: #ef5350;
-  --color-danger-dark: #c62828;
+  --color-text: #e8e0d8;
+  --color-text-muted: #a89e93;
+  --color-text-dim: #736a60;
 
-  --color-heatmap-empty: transparent;
-  --color-heatmap-low: radial-gradient(circle, #5a2b2e, #3a1417);
-  --color-heatmap-mid: radial-gradient(circle, #6a5a2f, #4a3a18);
-  --color-heatmap-high: radial-gradient(circle, #2f6a5e, #1b4a42);
-  --color-heatmap-max: radial-gradient(circle, #3cffc3, #1fa87f);
+  --color-success: #7a9a6d;
+  --color-success-light: #94b384;
+  --color-warning: #d4a054;
+  --color-danger: #b85c5c;
+  --color-danger-dark: #8f4444;
 
-  --blur-amount: 12px;
-  --border-radius: 12px;
-  --border-radius-sm: 8px;
+  --color-heatmap-empty: rgba(55, 48, 42, 0.3);
+  --color-heatmap-low: #5c4a3e;
+  --color-heatmap-mid: #8a7a4a;
+  --color-heatmap-high: #6b8a5e;
+  --color-heatmap-max: #8ab878;
+
+  --blur-amount: 0px;
+  --border-radius: 5px;
+  --border-radius-sm: 3px;
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
@@ -38,9 +39,11 @@
   --font-size-sm: 0.875rem;
   --font-size-md: 1rem;
   --font-size-lg: 1.25rem;
-  --font-size-xl: 1.5rem;
-  --font-size-xxl: 2rem;
-  --font-size-huge: 3rem;
+  --font-size-xl: 1.375rem;
+  --font-size-xxl: 1.75rem;
+  --font-size-huge: 2.25rem;
+
+  --surface-pattern: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 Q45 15 40 30 T30 55' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.4'/%3E%3Cpath d='M10 10 Q25 20 20 35 T10 55' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.3'/%3E%3Cpath d='M50 8 Q55 25 48 40 T50 58' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.3'/%3E%3C/svg%3E");
 }
 
 * {
@@ -57,12 +60,13 @@ body {
 
 body {
   font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
-    sans-serif;
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, sans-serif;
   background: linear-gradient(
-    135deg,
+    160deg,
     var(--color-primary-dark) 0%,
-    var(--color-primary) 100%
+    var(--color-primary) 50%,
+    #302a25 100%
   );
   color: var(--color-text);
   line-height: 1.5;
@@ -95,10 +99,21 @@ body {
 
 .glass-card {
   background: var(--color-bg-card);
-  backdrop-filter: blur(var(--blur-amount));
-  -webkit-backdrop-filter: blur(var(--blur-amount));
   border-radius: var(--border-radius);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  position: relative;
+}
+
+.glass-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--surface-pattern);
+  background-size: 60px 60px;
+  background-repeat: repeat;
+  opacity: 0.04;
+  pointer-events: none;
+  border-radius: inherit;
 }
 
 .select-wrapper {
@@ -108,9 +123,8 @@ body {
 .custom-select {
   width: 100%;
   padding: var(--spacing-sm) var(--spacing-md);
-  background: rgba(0, 65, 78, 0.4);
-  backdrop-filter: blur(var(--blur-amount));
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(55, 48, 42, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--border-radius);
   color: var(--color-text);
   font-size: var(--font-size-md);
@@ -126,12 +140,12 @@ body {
 }
 
 .custom-select:hover {
-  border-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .custom-select:focus {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 2px rgba(0, 180, 216, 0.2);
+  box-shadow: 0 0 0 2px rgba(194, 120, 92, 0.15);
 }
 
 .custom-select option {
@@ -173,12 +187,12 @@ button {
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
   color: var(--color-text);
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .btn-danger {
@@ -198,7 +212,7 @@ button {
 }
 
 .btn-icon:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
   color: var(--color-text);
 }
 
@@ -206,8 +220,8 @@ input,
 textarea {
   font-family: inherit;
   padding: var(--spacing-sm) var(--spacing-md);
-  background: rgba(0, 65, 78, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(55, 48, 42, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--border-radius-sm);
   color: var(--color-text);
   font-size: var(--font-size-md);
@@ -218,7 +232,7 @@ textarea {
 input:focus,
 textarea:focus {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 2px rgba(0, 180, 216, 0.2);
+  box-shadow: 0 0 0 2px rgba(194, 120, 92, 0.15);
 }
 
 input::placeholder,
@@ -240,14 +254,26 @@ textarea::placeholder {
 
 .modal-content {
   background: var(--color-bg-overlay);
-  backdrop-filter: blur(var(--blur-amount));
   border-radius: var(--border-radius);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.04);
   padding: var(--spacing-lg);
   width: 100%;
   max-width: 400px;
   max-height: 90vh;
   overflow-y: auto;
+  position: relative;
+}
+
+.modal-content::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--surface-pattern);
+  background-size: 60px 60px;
+  background-repeat: repeat;
+  opacity: 0.04;
+  pointer-events: none;
+  border-radius: inherit;
 }
 
 .modal-title {
@@ -396,8 +422,8 @@ textarea::placeholder {
   position: absolute;
   cursor: pointer;
   inset: 0;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
   transition: 0.3s;
 }
 

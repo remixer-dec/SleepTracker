@@ -286,7 +286,7 @@ v-cloak {
 .loader {
   width: 40px;
   height: 40px;
-  border: 3px solid rgba(255, 255, 255, 0.1);
+  border: 3px solid rgba(255, 255, 255, 0.06);
   border-top-color: var(--color-accent);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -299,7 +299,7 @@ v-cloak {
 .rage-background {
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at center, rgba(198, 40, 40, 0.3) 0%, transparent 70%);
+  background: radial-gradient(circle at center, rgba(143, 68, 68, 0.3) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
   display: flex;
