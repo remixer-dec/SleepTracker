@@ -17,13 +17,13 @@
 
   --color-success: #26a69a;
   --color-success-light: #4db6ac;
-  --color-warning: #ffb74d;
+  --color-warning: #d4a050;
   --color-danger: #ef5350;
   --color-danger-dark: #c62828;
 
   --color-heatmap-empty: transparent;
-  --color-heatmap-low: radial-gradient(circle, #5a2b2e, #3a1417);
-  --color-heatmap-mid: radial-gradient(circle, #6a5a2f, #4a3a18);
+  --color-heatmap-low: radial-gradient(circle, #7a6a30, #5a4a18);
+  --color-heatmap-mid: radial-gradient(circle, #4a7a4a, #2a5a2a);
   --color-heatmap-high: radial-gradient(circle, #2f6a5e, #1b4a42);
   --color-heatmap-max: radial-gradient(circle, #3cffc3, #1fa87f);
 
@@ -62,7 +62,7 @@
   --loader-track-color: rgba(255, 255, 255, 0.1);
   --color-star-filled: #ffc107;
   --color-mood-bad: #ef5350;
-  --color-mood-okay: #ffb74d;
+  --color-mood-okay: #d4a050;
   --color-mood-good: #26a69a;
   --color-rage: #c62828;
   --rage-glow: rgba(198, 40, 40, 0.3);
@@ -92,10 +92,10 @@ html[data-theme="warm"] {
   --color-danger-dark: #8f4444;
 
   --color-heatmap-empty: rgba(55, 48, 42, 0.3);
-  --color-heatmap-low: #5c4a3e;
-  --color-heatmap-mid: #bf6b35;
-  --color-heatmap-high: #6b8a5e;
-  --color-heatmap-max: #8ab878;
+  --color-heatmap-low: #8a8050;
+  --color-heatmap-mid: #608a50;
+  --color-heatmap-high: #68a860;
+  --color-heatmap-max: #80c878;
 
   --blur-amount: 0px;
   --border-radius: 5px;
@@ -156,15 +156,15 @@ html[data-theme="light"] {
 
   --color-success: #4a7840;
   --color-success-light: #5a8850;
-  --color-warning: #a06020;
-  --color-danger: #8f4040;
-  --color-danger-dark: #6f2828;
+  --color-warning: #c09030;
+  --color-danger: #c05050;
+  --color-danger-dark: #8f3030;
 
-  --color-heatmap-empty: rgba(180, 160, 140, 0.2);
-  --color-heatmap-low: #e0b090;
-  --color-heatmap-mid: #d47030;
-  --color-heatmap-high: #7ab06a;
-  --color-heatmap-max: #4a9040;
+  --color-heatmap-empty: rgba(200, 180, 160, 0.2);
+  --color-heatmap-low: #b8b060;
+  --color-heatmap-mid: #78b068;
+  --color-heatmap-high: #58a050;
+  --color-heatmap-max: #40a040;
 
   --blur-amount: 0px;
   --border-radius: 5px;
@@ -189,12 +189,12 @@ html[data-theme="light"] {
   --adjust-btn-radius: 6px;
   --heatmap-today-shadow: inset 0 0 0 1.5px rgba(184, 101, 64, 0.6);
   --loader-track-color: rgba(0, 0, 0, 0.1);
-  --color-star-filled: #a06020;
-  --color-mood-bad: #8f4040;
-  --color-mood-okay: #a06020;
+  --color-star-filled: #c09030;
+  --color-mood-bad: #c05050;
+  --color-mood-okay: #c09030;
   --color-mood-good: #4a7840;
-  --color-rage: #8f4040;
-  --rage-glow: rgba(143, 64, 64, 0.2);
+  --color-rage: #c05050;
+  --rage-glow: rgba(192, 80, 80, 0.15);
 }
 
 html[data-theme="light"] body {

@@ -19,33 +19,33 @@
         </svg>
       </span>
     </div>
-
-    <button
-      class="btn-icon action-btn"
-      @click="cycleTheme"
-      :title="themeLabel"
-    >
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-        <circle cx="9" cy="9" r="7"/>
-        <path d="M9 2 A7 7 0 0 1 9 16 Z" fill="currentColor" stroke="none"/>
-      </svg>
-    </button>
-
-    <button
-      v-if="authStore.isOwner"
-      class="btn-icon action-btn"
-      @click="$emit('add-habit')"
-      :title="t('habits.create')"
-    >
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-        <path
-          d="M10 4v12M4 10h12"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-        />
-      </svg>
-    </button>
+    <div class="selector-actions">
+      <button
+        v-if="authStore.isOwner"
+        class="btn-icon action-btn"
+        @click="$emit('add-habit')"
+        :title="t('habits.create')"
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <path
+            d="M10 4v12M4 10h12"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+      <button
+        class="btn-icon action-btn"
+        @click="cycleTheme"
+        :title="themeLabel"
+      >
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="9" cy="9" r="7"/>
+          <path d="M9 2 A7 7 0 0 1 9 16 Z" fill="currentColor" stroke="none"/>
+        </svg>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -98,6 +98,13 @@ function cycleTheme() {
 
 .select-wrapper {
   flex: 1;
+}
+
+.selector-actions {
+  position: absolute;
+  top: 23px;
+  display: flex;
+  gap: var(--spacing-xs);
 }
 
 .action-btn {
