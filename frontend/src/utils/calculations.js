@@ -102,8 +102,11 @@ function getBadnessLevel(value, habit) {
       return +!isGreenValue(value, habit)
     case 'reachable': {
       const goal = habit.goal || 8
-      if (value === 0) return 1
-      return Math.max(0, 1 - (value / goal))
+      if (value <= 0) return 1
+      
+      // Use a quadratic curve to be stricter about underachievement.
+      const ratio = Math.min(value / goal, 1)
+      return Math.max(0, 1 - Math.pow(ratio, 2))
     }
     case 'percentage':
       return 1 - (value / 100)
