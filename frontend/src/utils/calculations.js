@@ -19,9 +19,7 @@ const THEMES = {
   }
 }
 
-function getCurrentPalette() {
-  if (typeof document === 'undefined') return THEMES.default
-  const themeName = document.documentElement.dataset.theme
+function getPalette(themeName) {
   if (themeName === 'warm') return THEMES.warm
   if (themeName === 'light') return THEMES.light
   return THEMES.default
@@ -89,17 +87,17 @@ export function isGreenValue(value, habit) {
   }
 }
 
-export function getValueColor(value, habit) {
+export function getValueColor(value, habit, themeName) {
   if (value === null || value === undefined) {
     return 'transparent'
   }
 
-  const palette = getCurrentPalette()
+  const palette = getPalette(themeName)
   const isGood = isGreenValue(value, habit)
 
   if (!isGood) {
     const badness = getBadnessLevel(value, habit)
-    return interpolateColor(palette.low, palette.danger, badness)
+    return interpolateColor(palette.danger, palette.mid, 1 - badness)
   }
 
   const goodness = getGoodnessLevel(value, habit)
@@ -115,8 +113,8 @@ function getGoodnessLevel(value, habit) {
     case 'reachable': {
       const goal = habit.goal || 8
       if (value >= goal + 2) return 1
-      if (value >= goal) return 0.6
-      return 0.3
+      if (value >= goal) return (value - goal) / 2
+      return 0
     }
     case 'percentage':
       return value / 100
