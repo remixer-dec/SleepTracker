@@ -1,3 +1,11 @@
+const DEFAULT_COLORS = {
+  empty: 'transparent',
+  low: { r: 138, g: 128, b: 80 },    // Matches --color-heatmap-low (#8a8050)
+  mid: { r: 96, g: 138, b: 80 },     // Matches --color-heatmap-mid (#608a50)
+  high: { r: 88, g: 160, b: 80 },    // Matches --color-heatmap-high (#58a050)
+  danger: { r: 160, g: 60, b: 60 }   // A muted red to fit the theme
+}
+
 export function formatDate(date) {
   const d = new Date(date)
   const year = d.getFullYear()
@@ -50,25 +58,41 @@ export function isGreenValue(value, habit) {
   }
 }
 
-export function getValueColor(value, habit) {
+/**
+ * Dynamically calculates the color based on value performance.
+ * Returns an rgb() string for smooth gradients.
+ */
+export function getValueColor(value, habit, colors = DEFAULT_COLORS) {
   if (value === null || value === undefined) {
-    return 'var(--color-heatmap-empty)'
+    return colors.empty
   }
 
   const isGood = isGreenValue(value, habit)
 
   if (!isGood) {
     const badness = getBadnessLevel(value, habit)
-    if (badness > 0.7) return 'var(--color-danger)'
-    if (badness > 0.3) return 'var(--color-warning)'
-    return 'var(--color-heatmap-low)'
+    // Dynamic interpolation: from Low -> Danger based on badness %
+    return interpolateColor(colors.low, colors.danger, badness)
   }
 
   const goodness = getGoodnessLevel(value, habit)
-  if (goodness > 0.8) return 'var(--color-heatmap-max)'
-  if (goodness > 0.5) return 'var(--color-heatmap-high)'
-  if (goodness > 0.2) return 'var(--color-heatmap-mid)'
-  return 'var(--color-heatmap-low)'
+  // Dynamic interpolation: from Mid -> High based on goodness %
+  // (We skip 'low' because if it's green, it's already at least 'mid' status)
+  return interpolateColor(colors.mid, colors.high, goodness)
+}
+
+// Helper: Linear interpolation between two RGB objects
+function interpolateColor(c1, c2, factor) {
+  if (!c1 || !c2) return 'transparent'
+  
+  // Clamp factor between 0 and 1
+  const f = Math.max(0, Math.min(1, factor))
+  
+  const r = Math.round(c1.r + (c2.r - c1.r) * f)
+  const g = Math.round(c1.g + (c2.g - c1.g) * f)
+  const b = Math.round(c1.b + (c2.b - c1.b) * f)
+  
+  return `rgb(${r}, ${g}, ${b})`
 }
 
 function getGoodnessLevel(value, habit) {
@@ -104,7 +128,7 @@ function getBadnessLevel(value, habit) {
       const goal = habit.goal || 8
       if (value <= 0) return 1
       
-      // Use a quadratic curve to be stricter about underachievement.
+      // Quadratic formula: penalizes missing the goal more aggressively
       const ratio = Math.min(value / goal, 1)
       return Math.max(0, 1 - Math.pow(ratio, 2))
     }
