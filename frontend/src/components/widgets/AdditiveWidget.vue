@@ -113,7 +113,7 @@ function updateValue(val) {
 
 .progress-bar {
   height: 12px;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--widget-bg);
   border-radius: 2px;
   overflow: hidden;
 }
@@ -143,15 +143,15 @@ function updateValue(val) {
 .adjust-btn {
   width: 48px;
   height: 48px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--adjust-btn-radius);
+  background: var(--widget-bg);
   color: var(--color-text);
   font-size: var(--font-size-xl);
   font-weight: 300;
 }
 
 .adjust-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--widget-hover-bg);
 }
 
 .value-info {

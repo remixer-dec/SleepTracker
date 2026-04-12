@@ -118,7 +118,7 @@ const goalText = computed(() => {
   width: 100%;
   height: 8px;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--widget-bg);
   appearance: none;
   outline: none;
   margin-bottom: var(--spacing-md);
@@ -155,13 +155,13 @@ const goalText = computed(() => {
   width: 40px;
   height: 40px;
   border-radius: var(--border-radius-sm);
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--widget-bg);
   color: var(--color-text);
   font-size: var(--font-size-sm);
 }
 
 .quick-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--widget-hover-bg);
 }
 
 .quick-btn.active {

@@ -308,7 +308,7 @@ watch(
 }
 
 .heatmap-cell.today {
-  box-shadow: inset 0 0 0 1.5px rgba(194, 120, 92, 0.5);
+  box-shadow: var(--heatmap-today-shadow);
 }
 
 .cell-day {

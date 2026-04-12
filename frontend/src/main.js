@@ -1,4 +1,8 @@
 import { createApp } from 'vue'
+
+// Apply saved theme before mount to avoid flash
+const savedTheme = localStorage.getItem('theme')
+if (savedTheme) document.documentElement.dataset.theme = savedTheme
 import { createPinia } from 'pinia'
 import { createI18n } from 'vue-i18n'
 import App from './App.vue'

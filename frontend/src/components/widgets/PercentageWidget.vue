@@ -84,7 +84,7 @@ const progressColor = computed(() => {
 }
 
 .circle-bg {
-  stroke: rgba(255, 255, 255, 0.06);
+  stroke: var(--widget-bg);
 }
 
 .circle-progress {
@@ -115,7 +115,7 @@ const progressColor = computed(() => {
   width: 100%;
   height: 8px;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--widget-bg);
   appearance: none;
   outline: none;
 }

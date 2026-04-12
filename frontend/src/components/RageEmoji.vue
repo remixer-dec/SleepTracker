@@ -31,6 +31,11 @@
 </template>
 
 <style scoped>
+/* CSS overrides SVG presentation attributes */
+.rage-emoji circle:first-child {
+  fill: var(--color-rage);
+}
+
 .rage-emoji {
   width: 100%;
   height: 100%;
