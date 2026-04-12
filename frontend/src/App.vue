@@ -23,6 +23,11 @@
         :entries="habitsStore.currentEntries"
         @select-date="openEntryModal"
       />
+      <BalanceWidget
+        v-if="habitsStore.selectedHabit.goal"
+        :habit="habitsStore.selectedHabit"
+        :entries="habitsStore.currentEntries"
+      />
     </div>
 
     <div v-else-if="!authStore.isLoading && habitsStore.habits.length === 0" class="empty-state">
@@ -67,6 +72,7 @@ import HabitSelector from './components/HabitSelector.vue'
 import HabitTitle from './components/HabitTitle.vue'
 import StreakDisplay from './components/StreakDisplay.vue'
 import HeatmapCalendar from './components/HeatmapCalendar.vue'
+import BalanceWidget from './components/BalanceWidget.vue'
 import HabitModal from './components/HabitModal.vue'
 import EntryModal from './components/EntryModal.vue'
 import RageEmoji from './components/RageEmoji.vue'
