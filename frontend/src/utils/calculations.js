@@ -1,9 +1,40 @@
-const DEFAULT_COLORS = {
-  empty: 'transparent',
-  low: { r: 138, g: 128, b: 80 },    // Matches --color-heatmap-low (#8a8050)
-  mid: { r: 96, g: 138, b: 80 },     // Matches --color-heatmap-mid (#608a50)
-  high: { r: 88, g: 160, b: 80 },    // Matches --color-heatmap-high (#58a050)
-  danger: { r: 160, g: 60, b: 60 }   // A muted red to fit the theme
+const THEMES = {
+  warm: {
+    low: { r: 138, g: 128, b: 80 },
+    mid: { r: 96, g: 138, b: 80 },
+    high: { r: 104, g: 168, b: 96 },
+    danger: { r: 160, g: 64, b: 64 }
+  },
+  light: {
+    low: { r: 230, g: 209, b: 197 },
+    mid: { r: 181, g: 194, b: 163 },
+    high: { r: 74, g: 102, b: 53 },
+    danger: { r: 194, g: 101, b: 74 }
+  },
+  default: { // Teal (unset theme)
+    low: { r: 99, g: 61, b: 76 },
+    mid: { r: 61, g: 99, b: 89 },
+    high: { r: 107, g: 201, b: 177 },
+    danger: { r: 201, g: 87, b: 128 }
+  }
+}
+
+function getCurrentPalette() {
+  if (typeof document === 'undefined') return THEMES.default
+  const themeName = document.documentElement.dataset.theme
+  if (themeName === 'warm') return THEMES.warm
+  if (themeName === 'light') return THEMES.light
+  return THEMES.default
+}
+
+// Helper: Linear interpolation between two RGB objects
+function interpolateColor(c1, c2, factor) {
+  if (!c1 || !c2) return 'transparent'
+  const f = Math.max(0, Math.min(1, factor))
+  const r = Math.round(c1.r + (c2.r - c1.r) * f)
+  const g = Math.round(c1.g + (c2.g - c1.g) * f)
+  const b = Math.round(c1.b + (c2.b - c1.b) * f)
+  return `rgb(${r}, ${g}, ${b})`
 }
 
 export function formatDate(date) {
@@ -58,41 +89,21 @@ export function isGreenValue(value, habit) {
   }
 }
 
-/**
- * Dynamically calculates the color based on value performance.
- * Returns an rgb() string for smooth gradients.
- */
-export function getValueColor(value, habit, colors = DEFAULT_COLORS) {
+export function getValueColor(value, habit) {
   if (value === null || value === undefined) {
-    return colors.empty
+    return 'transparent'
   }
 
+  const palette = getCurrentPalette()
   const isGood = isGreenValue(value, habit)
 
   if (!isGood) {
     const badness = getBadnessLevel(value, habit)
-    // Dynamic interpolation: from Low -> Danger based on badness %
-    return interpolateColor(colors.low, colors.danger, badness)
+    return interpolateColor(palette.low, palette.danger, badness)
   }
 
   const goodness = getGoodnessLevel(value, habit)
-  // Dynamic interpolation: from Mid -> High based on goodness %
-  // (We skip 'low' because if it's green, it's already at least 'mid' status)
-  return interpolateColor(colors.mid, colors.high, goodness)
-}
-
-// Helper: Linear interpolation between two RGB objects
-function interpolateColor(c1, c2, factor) {
-  if (!c1 || !c2) return 'transparent'
-  
-  // Clamp factor between 0 and 1
-  const f = Math.max(0, Math.min(1, factor))
-  
-  const r = Math.round(c1.r + (c2.r - c1.r) * f)
-  const g = Math.round(c1.g + (c2.g - c1.g) * f)
-  const b = Math.round(c1.b + (c2.b - c1.b) * f)
-  
-  return `rgb(${r}, ${g}, ${b})`
+  return interpolateColor(palette.mid, palette.high, goodness)
 }
 
 function getGoodnessLevel(value, habit) {
@@ -128,7 +139,7 @@ function getBadnessLevel(value, habit) {
       const goal = habit.goal || 8
       if (value <= 0) return 1
       
-      // Quadratic formula: penalizes missing the goal more aggressively
+      // Quadratic formula for stricter badness visualization
       const ratio = Math.min(value / goal, 1)
       return Math.max(0, 1 - Math.pow(ratio, 2))
     }
