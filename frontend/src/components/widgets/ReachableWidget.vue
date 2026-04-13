@@ -81,7 +81,7 @@ const goalText = computed(() => {
   if (diff >= 0) {
     return diff > 0 ? `+${diff} ${t('goal.above')}` : t('goal.reached')
   }
-  return `${Math.abs(diff)} ${t('goal.below')}`
+  return `${Math.abs(diff).toFixed(2)} ${t('goal.below')}`
 })
 </script>
 

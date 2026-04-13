@@ -47,7 +47,7 @@
             today: day.isToday,
             'has-entry': day.hasEntry,
           }"
-          :style="{ background: day.color }"
+          :style="day.color"
           :title="day.hasEntry ? formatTooltip(day) : ''"
           @click="handleCellClick(day)"
         >
@@ -65,7 +65,7 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { formatDate, getValueColor } from "../utils/calculations.js";
+import { formatDate, getValueStyle } from "../utils/calculations.js";
 
 const { t, locale } = useI18n();
 
@@ -146,15 +146,15 @@ const displayDays = computed(() => {
       hasEntry,
       value: entry?.value,
       color: hasEntry
-        ? getValueColor(entry.value, props.habit)
-        : "var(--color-heatmap-empty)",
+        ? getValueStyle(entry.value, props.habit)
+        : {background: "var(--color-heatmap-empty)", opacity: 1},
     });
   }
 
   const remaining = 7 - (days.length % 7);
   if (remaining < 7) {
     for (let i = 0; i < remaining; i++) {
-      days.push({ date: `empty-end-${i}`, inMonth: false, color: "transparent" });
+      days.push({ date: `empty-end-${i}`, inMonth: false, color: {background: "transparent", opacity:1} });
     }
   }
 
