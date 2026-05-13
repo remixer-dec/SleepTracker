@@ -322,6 +322,10 @@ watch(
   opacity: 1;
 }
 
+html[data-theme="light"] .heatmap-cell.has-entry{
+  color: #fff !important
+}
+
 .swipe-hint {
   opacity: 0.5;
 }
