@@ -93,7 +93,6 @@ function cycleTheme() {
   display: flex;
   gap: var(--spacing-sm);
   align-items: center;
-  justify-content: space-between;
   width: 100%;
 }
 
@@ -102,15 +101,16 @@ function cycleTheme() {
 }
 
 .selector-actions {
+  position: absolute;
+  top: 23px;
   display: flex;
   gap: var(--spacing-xs);
-  align-items: center;
 }
 
 .action-btn {
   flex-shrink: 0;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -120,5 +120,11 @@ function cycleTheme() {
 
 .action-btn:hover {
   background: var(--btn-icon-hover-bg);
+}
+
+@media (max-width: 767px) {
+  .habit-selector {
+    margin-top: 10px;
+  }
 }
 </style>
