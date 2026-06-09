@@ -119,9 +119,6 @@ export default {
       thisMonth: 'This Month',
       lastMonth: 'Last Month'
     },
-    actions: {
-      swipeHint: 'Swipe to see more'
-    },
     stats: {
       balance: 'Balance'
     }
@@ -246,9 +243,6 @@ export default {
       thisMonth: 'Este Mes',
       lastMonth: 'Mes Pasado'
     },
-    actions: {
-      swipeHint: 'Desliza para ver mas'
-    },
     stats: {
       balance: 'Balance'
     }
@@ -372,9 +366,6 @@ export default {
       thisWeek: 'Эта неделя',
       thisMonth: 'Этот месяц',
       lastMonth: 'Прошлый месяц'
-    },
-    actions: {
-      swipeHint: 'Свайпните для просмотра'
     },
     stats: {
       balance: 'Баланс'

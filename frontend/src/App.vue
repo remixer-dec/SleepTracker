@@ -132,8 +132,13 @@ function handleMonthChange(monthDate) {
 
 async function saveHabit(habitData) {
   try {
-    if (habitData.notificationsOn && 'Notification' in window && Notification.permission === 'default') {
-      await Notification.requestPermission()
+    const shouldRequestNotificationPermission =
+      habitData.notificationsOn &&
+      isNotificationPermissionRequestAvailable() &&
+      Notification.permission === 'default'
+
+    if (shouldRequestNotificationPermission) {
+      await requestNotificationPermission()
     }
 
     if (editingHabit.value) {
@@ -141,6 +146,7 @@ async function saveHabit(habitData) {
     } else {
       await habitsStore.createHabit(habitData)
     }
+
     showHabitModal.value = false
     checkAchievements()
   } catch (error) {
@@ -209,18 +215,46 @@ function checkNotifications() {
   })
 }
 
-async function setupNotifications() {
+function setupNotifications() {
   if (!('Notification' in window)) return
 
-  // Request permission if any habit has notifications enabled
-  const hasNotifications = habitsStore.habits.some(h => h.notificationsOn)
-  if (hasNotifications && Notification.permission === 'default') {
-    await Notification.requestPermission()
-  }
-
-  // Run check immediately then every minute
+  // Run check immediately then every minute without prompting on app load.
   checkNotifications()
   setInterval(checkNotifications, 60000)
+}
+
+function isNotificationPermissionRequestAvailable() {
+  return 'Notification' in window && typeof Notification.requestPermission === 'function'
+}
+
+function requestNotificationPermission() {
+  if (!isNotificationPermissionRequestAvailable() || Notification.permission !== 'default') {
+    return Promise.resolve('Notification' in window ? Notification.permission : 'unsupported')
+  }
+
+  return new Promise(resolve => {
+    let settled = false
+    let fallbackTimer
+    const settle = permission => {
+      if (settled) return
+      settled = true
+      clearTimeout(fallbackTimer)
+      resolve(permission || Notification.permission)
+    }
+    fallbackTimer = setTimeout(() => settle(Notification.permission), 1000)
+
+    try {
+      const request = Notification.requestPermission(settle)
+      if (request && typeof request.then === 'function') {
+        request.then(settle).catch(() => settle(Notification.permission))
+      } else if (typeof request === 'string') {
+        settle(request)
+      }
+    } catch (error) {
+      console.error('Failed to request notification permission:', error)
+      settle(Notification.permission)
+    }
+  })
 }
 
 function sendNotification(title, body) {

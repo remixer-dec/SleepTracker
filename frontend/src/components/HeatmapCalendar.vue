@@ -58,9 +58,6 @@
       </div>
     </div>
 
-    <p class="swipe-hint text-dim text-xs text-center mt-sm">
-      {{ t("actions.swipeHint") }}
-    </p>
   </div>
 </template>
 
@@ -339,15 +336,6 @@ html[data-theme="light"] .heatmap-cell.has-entry{
   color: #fff !important
 }
 
-.swipe-hint {
-  opacity: 0.5;
-}
-
-@media (min-width: 768px) {
-  .swipe-hint {
-    display: none;
-  }
-}
 
 @media (max-width: 767px) {
   .heatmap-cell.has-entry:active::after,
