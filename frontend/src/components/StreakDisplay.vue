@@ -168,6 +168,12 @@ const fireContainerStyle = computed(() => {
   z-index: 1;
 }
 
+@media (max-width: 767px) {
+  .streak-stats {
+    gap: var(--spacing-sm);
+  }
+}
+
 .stat {
   text-align: center;
   min-width: 80px;

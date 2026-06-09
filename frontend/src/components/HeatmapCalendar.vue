@@ -49,6 +49,8 @@
           }"
           :style="day.color"
           :title="day.hasEntry ? formatTooltip(day) : ''"
+          :data-mobile-tooltip="day.hasEntry ? formatTooltip(day) : ''"
+          tabindex="0"
           @click="handleCellClick(day)"
         >
           <span class="cell-day" v-if="day.inMonth">{{ day.dayNumber }}</span>
@@ -80,7 +82,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["select-date"]);
+const emit = defineEmits(["select-date", "month-change"]);
 
 const currentDate = ref(new Date());
 const touchStartX = ref(0);
@@ -229,6 +231,17 @@ function handleTouchEnd() {
 }
 
 watch(
+  currentDate,
+  (newDate) => {
+    emit(
+      "month-change",
+      new Date(newDate.getFullYear(), newDate.getMonth(), 1),
+    );
+  },
+  { immediate: true },
+);
+
+watch(
   () => props.habit?.id,
   () => {
     currentDate.value = new Date();
@@ -333,6 +346,26 @@ html[data-theme="light"] .heatmap-cell.has-entry{
 @media (min-width: 768px) {
   .swipe-hint {
     display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .heatmap-cell.has-entry:active::after,
+  .heatmap-cell.has-entry:focus-visible::after {
+    content: attr(data-mobile-tooltip);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-bg-overlay);
+    color: var(--color-text);
+    font-size: var(--font-size-xs);
+    padding: 2px 6px;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--card-border-color);
+    white-space: nowrap;
+    z-index: 2;
+    pointer-events: none;
   }
 }
 </style>

@@ -22,11 +22,13 @@
         :habit="habitsStore.selectedHabit"
         :entries="habitsStore.currentEntries"
         @select-date="openEntryModal"
+        @month-change="handleMonthChange"
       />
       <BalanceWidget
         v-if="habitsStore.selectedHabit.goal"
         :habit="habitsStore.selectedHabit"
         :entries="habitsStore.currentEntries"
+        :month-date="selectedMonth"
       />
     </div>
 
@@ -87,6 +89,7 @@ const showEntryModal = ref(false)
 const editingHabit = ref(null)
 const editingEntry = ref(null)
 const selectedDate = ref('')
+const selectedMonth = ref(new Date())
 
 const streakInfo = computed(() => {
   if (!habitsStore.selectedHabit || !habitsStore.currentEntries) {
@@ -121,6 +124,10 @@ function openEntryModal(date) {
   selectedDate.value = date
   editingEntry.value = habitsStore.getEntryByDate(habitsStore.selectedHabitId, date)
   showEntryModal.value = true
+}
+
+function handleMonthChange(monthDate) {
+  selectedMonth.value = monthDate
 }
 
 async function saveHabit(habitData) {

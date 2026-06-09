@@ -1,6 +1,6 @@
 <template>
   <div class="balance-widget">
-    <span class="balance-label">Balance</span>
+    <span class="balance-label">{{ t("stats.balance") }}</span>
     <span class="balance-value" :style="{ color: balanceColor }">
       {{ formattedBalance }}
     </span>
@@ -9,16 +9,19 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   habit: { type: Object, required: true },
-  entries: { type: Array, default: () => [] }
+  entries: { type: Array, default: () => [] },
+  monthDate: { type: Date, required: true }
 })
 
 const balance = computed(() => {
-  const now = new Date()
-  const year = now.getFullYear()
-  const month = now.getMonth()
+  const year = props.monthDate.getFullYear()
+  const month = props.monthDate.getMonth()
   const goal = props.habit.goal || 0
 
   let total = 0
@@ -50,6 +53,12 @@ const balanceColor = computed(() => {
   justify-content: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-xs) var(--spacing-md);
+}
+
+@media (max-width: 767px) {
+  .balance-widget {
+    padding-bottom: var(--spacing-sm);
+  }
 }
 
 .balance-label {
