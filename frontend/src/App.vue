@@ -22,6 +22,13 @@
         :habit="habitsStore.selectedHabit"
         :entries="habitsStore.currentEntries"
         @select-date="openEntryModal"
+        @month-change="handleMonthChange"
+      />
+      <BalanceWidget
+        v-if="habitsStore.selectedHabit.goal"
+        :habit="habitsStore.selectedHabit"
+        :entries="habitsStore.currentEntries"
+        :month-date="selectedMonth"
       />
     </div>
 
@@ -67,6 +74,7 @@ import HabitSelector from './components/HabitSelector.vue'
 import HabitTitle from './components/HabitTitle.vue'
 import StreakDisplay from './components/StreakDisplay.vue'
 import HeatmapCalendar from './components/HeatmapCalendar.vue'
+import BalanceWidget from './components/BalanceWidget.vue'
 import HabitModal from './components/HabitModal.vue'
 import EntryModal from './components/EntryModal.vue'
 import RageEmoji from './components/RageEmoji.vue'
@@ -81,6 +89,7 @@ const showEntryModal = ref(false)
 const editingHabit = ref(null)
 const editingEntry = ref(null)
 const selectedDate = ref('')
+const selectedMonth = ref(new Date())
 
 const streakInfo = computed(() => {
   if (!habitsStore.selectedHabit || !habitsStore.currentEntries) {
@@ -117,10 +126,19 @@ function openEntryModal(date) {
   showEntryModal.value = true
 }
 
+function handleMonthChange(monthDate) {
+  selectedMonth.value = monthDate
+}
+
 async function saveHabit(habitData) {
   try {
-    if (habitData.notificationsOn && 'Notification' in window && Notification.permission === 'default') {
-      await Notification.requestPermission()
+    const shouldRequestNotificationPermission =
+      habitData.notificationsOn &&
+      isNotificationPermissionRequestAvailable() &&
+      Notification.permission === 'default'
+
+    if (shouldRequestNotificationPermission) {
+      await requestNotificationPermission()
     }
 
     if (editingHabit.value) {
@@ -128,6 +146,7 @@ async function saveHabit(habitData) {
     } else {
       await habitsStore.createHabit(habitData)
     }
+
     showHabitModal.value = false
     checkAchievements()
   } catch (error) {
@@ -196,18 +215,46 @@ function checkNotifications() {
   })
 }
 
-async function setupNotifications() {
+function setupNotifications() {
   if (!('Notification' in window)) return
 
-  // Request permission if any habit has notifications enabled
-  const hasNotifications = habitsStore.habits.some(h => h.notificationsOn)
-  if (hasNotifications && Notification.permission === 'default') {
-    await Notification.requestPermission()
-  }
-
-  // Run check immediately then every minute
+  // Run check immediately then every minute without prompting on app load.
   checkNotifications()
   setInterval(checkNotifications, 60000)
+}
+
+function isNotificationPermissionRequestAvailable() {
+  return 'Notification' in window && typeof Notification.requestPermission === 'function'
+}
+
+function requestNotificationPermission() {
+  if (!isNotificationPermissionRequestAvailable() || Notification.permission !== 'default') {
+    return Promise.resolve('Notification' in window ? Notification.permission : 'unsupported')
+  }
+
+  return new Promise(resolve => {
+    let settled = false
+    let fallbackTimer
+    const settle = permission => {
+      if (settled) return
+      settled = true
+      clearTimeout(fallbackTimer)
+      resolve(permission || Notification.permission)
+    }
+    fallbackTimer = setTimeout(() => settle(Notification.permission), 1000)
+
+    try {
+      const request = Notification.requestPermission(settle)
+      if (request && typeof request.then === 'function') {
+        request.then(settle).catch(() => settle(Notification.permission))
+      } else if (typeof request === 'string') {
+        settle(request)
+      }
+    } catch (error) {
+      console.error('Failed to request notification permission:', error)
+      settle(Notification.permission)
+    }
+  })
 }
 
 function sendNotification(title, body) {
@@ -286,7 +333,7 @@ v-cloak {
 .loader {
   width: 40px;
   height: 40px;
-  border: 3px solid rgba(255, 255, 255, 0.1);
+  border: 3px solid var(--loader-track-color);
   border-top-color: var(--color-accent);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -299,7 +346,7 @@ v-cloak {
 .rage-background {
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at center, rgba(198, 40, 40, 0.3) 0%, transparent 70%);
+  background: radial-gradient(circle at center, var(--rage-glow) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
   display: flex;

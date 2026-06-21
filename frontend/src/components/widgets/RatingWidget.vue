@@ -63,7 +63,7 @@ const ratingLabel = computed(() => labels[props.modelValue] || '')
 }
 
 .star-btn.filled {
-  color: #ffc107;
+  color: var(--color-star-filled);
 }
 
 .star-icon {

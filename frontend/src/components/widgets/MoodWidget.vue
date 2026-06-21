@@ -7,11 +7,11 @@
       :class="{ active: modelValue === mood.value }"
       @click="$emit('update:modelValue', mood.value)"
     >
-      <svg class="mood-face" viewBox="0 0 50 50">
-        <circle cx="25" cy="25" r="23" fill="none" :stroke="mood.color" stroke-width="2"/>
-        <circle cx="17" cy="20" r="3" :fill="mood.color"/>
-        <circle cx="33" cy="20" r="3" :fill="mood.color"/>
-        <path :d="mood.mouth" :stroke="mood.color" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <svg class="mood-face" viewBox="0 0 50 50" :style="{ color: `var(${mood.colorVar})` }">
+        <circle cx="25" cy="25" r="23" fill="none" stroke="currentColor" stroke-width="2"/>
+        <circle cx="17" cy="20" r="3" fill="currentColor"/>
+        <circle cx="33" cy="20" r="3" fill="currentColor"/>
+        <path :d="mood.mouth" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/>
       </svg>
       <span class="mood-label">{{ mood.label }}</span>
     </button>
@@ -29,24 +29,9 @@ defineProps({
 defineEmits(['update:modelValue'])
 
 const moods = [
-  {
-    value: 0,
-    label: 'Bad',
-    color: '#ef5350',
-    mouth: 'M15 35 Q25 28 35 35'
-  },
-  {
-    value: 1,
-    label: 'Okay',
-    color: '#ffb74d',
-    mouth: 'M15 32 L35 32'
-  },
-  {
-    value: 2,
-    label: 'Good',
-    color: '#26a69a',
-    mouth: 'M15 30 Q25 38 35 30'
-  }
+  { value: 0, label: 'Bad',  colorVar: '--color-mood-bad',  mouth: 'M15 35 Q25 28 35 35' },
+  { value: 1, label: 'Okay', colorVar: '--color-mood-okay', mouth: 'M15 32 L35 32' },
+  { value: 2, label: 'Good', colorVar: '--color-mood-good', mouth: 'M15 30 Q25 38 35 30' },
 ]
 </script>
 
@@ -64,17 +49,16 @@ const moods = [
   gap: var(--spacing-sm);
   padding: var(--spacing-md);
   border-radius: var(--border-radius);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.03);
   transition: all 0.2s;
 }
 
 .mood-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .mood-btn.active {
-  background: rgba(255, 255, 255, 0.15);
-  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .mood-face {

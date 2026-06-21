@@ -150,8 +150,8 @@ const fireContainerStyle = computed(() => {
   display: inline-block;
   margin-top: var(--spacing-xs);
   padding: 2px var(--spacing-sm);
-  background: rgba(0, 26, 32, 0.8);
-  border-radius: 12px;
+  background: var(--color-bg-overlay);
+  border-radius: var(--border-radius-sm);
   font-size: var(--font-size-xs);
   color: var(--color-accent);
   position: relative;
@@ -166,6 +166,12 @@ const fireContainerStyle = computed(() => {
   margin: var(--spacing-md) 0;
   position: relative;
   z-index: 1;
+}
+
+@media (max-width: 767px) {
+  .streak-stats {
+    gap: var(--spacing-sm);
+  }
 }
 
 .stat {
@@ -191,7 +197,7 @@ const fireContainerStyle = computed(() => {
 
 .level-bar {
   height: 4px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--widget-bg);
   border-radius: 2px;
   overflow: hidden;
 }

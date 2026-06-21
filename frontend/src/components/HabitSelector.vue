@@ -19,26 +19,38 @@
         </svg>
       </span>
     </div>
-    <button
-      v-if="authStore.isOwner"
-      class="btn-icon add-btn"
-      @click="$emit('add-habit')"
-      :title="t('habits.create')"
-    >
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-        <path
-          d="M10 4v12M4 10h12"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-        />
-      </svg>
-    </button>
+    <div class="selector-actions">
+      <button
+        v-if="authStore.isOwner"
+        class="btn-icon action-btn"
+        @click="$emit('add-habit')"
+        :title="t('habits.create')"
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <path
+            d="M10 4v12M4 10h12"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+      <button
+        class="btn-icon action-btn"
+        @click="cycleTheme"
+        :title="themeLabel"
+      >
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="9" cy="9" r="7"/>
+          <path d="M9 2 A7 7 0 0 1 9 16 Z" fill="currentColor" stroke="none"/>
+        </svg>
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "../stores/auth.js";
 import { useHabitsStore } from "../stores/habits.js";
@@ -55,6 +67,25 @@ const selectedId = computed({
   get: () => habitsStore.selectedHabitId,
   set: (value) => habitsStore.selectHabit(value),
 });
+
+const themes = ['', 'warm', 'light']
+const themeLabels = { '': 'Original', warm: 'Warm Stone', light: 'Light Warm' }
+
+const currentTheme = ref(localStorage.getItem('theme') || '')
+
+const themeLabel = computed(() => themeLabels[currentTheme.value] || 'Original')
+
+function cycleTheme() {
+  const nextIndex = (themes.indexOf(currentTheme.value) + 1) % themes.length
+  currentTheme.value = themes[nextIndex]
+  if (currentTheme.value) {
+    document.documentElement.dataset.theme = currentTheme.value
+    localStorage.setItem('theme', currentTheme.value)
+  } else {
+    delete document.documentElement.dataset.theme
+    localStorage.removeItem('theme')
+  }
+}
 </script>
 
 <style scoped>
@@ -69,20 +100,31 @@ const selectedId = computed({
   flex: 1;
 }
 
-.add-btn {
+.selector-actions {
+  position: absolute;
+  top: 23px;
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.action-btn {
   flex-shrink: 0;
   width: 40px;
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 65, 78, 0.4);
+  background: var(--input-bg);
   border-radius: var(--border-radius-sm);
-  position: absolute;
-  top: 23px;
 }
 
-.add-btn:hover {
-  background: rgba(0, 65, 78, 0.6);
+.action-btn:hover {
+  background: var(--btn-icon-hover-bg);
+}
+
+@media (max-width: 767px) {
+  .habit-selector {
+    margin-top: 10px;
+  }
 }
 </style>

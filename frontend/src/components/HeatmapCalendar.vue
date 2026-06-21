@@ -47,8 +47,10 @@
             today: day.isToday,
             'has-entry': day.hasEntry,
           }"
-          :style="{ background: day.color }"
+          :style="day.color"
           :title="day.hasEntry ? formatTooltip(day) : ''"
+          :data-mobile-tooltip="day.hasEntry ? formatTooltip(day) : ''"
+          tabindex="0"
           @click="handleCellClick(day)"
         >
           <span class="cell-day" v-if="day.inMonth">{{ day.dayNumber }}</span>
@@ -56,16 +58,13 @@
       </div>
     </div>
 
-    <p class="swipe-hint text-dim text-xs text-center mt-sm">
-      {{ t("actions.swipeHint") }}
-    </p>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { formatDate, getValueColor } from "../utils/calculations.js";
+import { formatDate, getValueStyle } from "../utils/calculations.js";
 
 const { t, locale } = useI18n();
 
@@ -80,7 +79,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["select-date"]);
+const emit = defineEmits(["select-date", "month-change"]);
 
 const currentDate = ref(new Date());
 const touchStartX = ref(0);
@@ -146,15 +145,15 @@ const displayDays = computed(() => {
       hasEntry,
       value: entry?.value,
       color: hasEntry
-        ? getValueColor(entry.value, props.habit)
-        : "var(--color-heatmap-empty)",
+        ? getValueStyle(entry.value, props.habit)
+        : {background: "var(--color-heatmap-empty)", opacity: 1},
     });
   }
 
   const remaining = 7 - (days.length % 7);
   if (remaining < 7) {
     for (let i = 0; i < remaining; i++) {
-      days.push({ date: `empty-end-${i}`, inMonth: false, color: "transparent" });
+      days.push({ date: `empty-end-${i}`, inMonth: false, color: {background: "transparent", opacity:1} });
     }
   }
 
@@ -229,6 +228,17 @@ function handleTouchEnd() {
 }
 
 watch(
+  currentDate,
+  (newDate) => {
+    emit(
+      "month-change",
+      new Date(newDate.getFullYear(), newDate.getMonth(), 1),
+    );
+  },
+  { immediate: true },
+);
+
+watch(
   () => props.habit?.id,
   () => {
     currentDate.value = new Date();
@@ -289,21 +299,17 @@ watch(
 
 .heatmap-cell {
   aspect-ratio: 1;
-  border-radius: var(--border-radius-sm);
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition:
-    transform 0.1s,
-    box-shadow 0.1s;
+  transition: transform 0.1s;
   position: relative;
-  border-radius: 20px;
 }
 
 .heatmap-cell:not(.empty):hover {
-  transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transform: scale(1.03);
 }
 
 .heatmap-cell.empty {
@@ -312,14 +318,13 @@ watch(
 }
 
 .heatmap-cell.today {
-  box-shadow: inset 0 0 0 2px #304d53;
+  box-shadow: var(--heatmap-today-shadow);
 }
 
 .cell-day {
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   color: var(--color-text);
   opacity: 0.8;
-  font-size: 2rem;
 }
 
 .heatmap-cell.has-entry .cell-day {
@@ -327,13 +332,28 @@ watch(
   opacity: 1;
 }
 
-.swipe-hint {
-  opacity: 0.5;
+html[data-theme="light"] .heatmap-cell.has-entry{
+  color: #fff !important
 }
 
-@media (min-width: 768px) {
-  .swipe-hint {
-    display: none;
+
+@media (max-width: 767px) {
+  .heatmap-cell.has-entry:active::after,
+  .heatmap-cell.has-entry:focus-visible::after {
+    content: attr(data-mobile-tooltip);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-bg-overlay);
+    color: var(--color-text);
+    font-size: var(--font-size-xs);
+    padding: 2px 6px;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--card-border-color);
+    white-space: nowrap;
+    z-index: 2;
+    pointer-events: none;
   }
 }
 </style>

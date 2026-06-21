@@ -50,69 +50,62 @@ export function isGreenValue(value, habit) {
   }
 }
 
-export function getValueColor(value, habit) {
+/**
+ * Generates a CSS background string using color-mix.
+ * Logic:
+ * 0% - 75%: Red Zone (Danger)
+ * 75% - 100%: Transition Zone (Danger -> Mid) [This makes 7.25 look Greenish]
+ * 100%+: Green Zone (Mid -> High)
+ */
+export function getValueStyle(value, habit) {
   if (value === null || value === undefined) {
-    return 'var(--color-heatmap-empty)'
+    return { backgroundColor: 'var(--color-heatmap-empty)' }
   }
 
+  const goal = habit.goal || 8
+  const minGood = habit.minGood || goal // Usually same as goal for 'reachable'
+  
+  // Helper for color-mix syntax
+  // mix(colorA, colorB, percentage) -> percentage is how much of colorB
+  const mix = (a, b, pct) => `color-mix(in srgb, ${a}, ${b} ${Math.round(pct * 100)}%)`
+
+  // --- REACHABLE LOGIC (The 3-Zone Gradient) ---
+  if (habit.type === 'reachable') {
+    const ratio = value / goal
+    // Zero
+    if (ratio < 0.01) {
+      return { backgroundColor: mix('red', 'var(--color-heatmap-danger)', 0.6) }
+    }
+    
+    // 1. RED ZONE: 0 to 65% of goal
+    // Visual: Faint Red -> Solid Red
+    if (ratio < 0.65) {
+      const intensity = 1 - (ratio / 0.65)
+      return { backgroundColor: mix('transparent', 'var(--color-heatmap-danger)', 0.2 + intensity * 0.8) }
+    }
+    
+    // 2. TRANSITION ZONE: 65% to 100%
+    // Visual: Solid Red -> Solid Green (Mid)
+    if (ratio < 1) {
+      const progress = (ratio - 0.65) / 0.35
+      return { backgroundColor: mix('var(--color-heatmap-danger)', 'var(--color-heatmap-mid)', progress) }
+    }
+
+    // 3. GREEN ZONE: 100%+
+    // Visual: Mid Green -> High Green
+    // 100% = Mid. 125%+ = High.
+    const goodness = Math.min((value - goal) / (goal * 0.25), 1) // Fades to High over 2 hours (if goal is 8)
+    return { backgroundColor: mix('var(--color-heatmap-mid)', 'var(--color-heatmap-high)', goodness) }
+  }
+
+  // --- DEFAULT LOGIC FOR OTHER HABITS ---
   const isGood = isGreenValue(value, habit)
 
-  if (!isGood) {
-    const badness = getBadnessLevel(value, habit)
-    if (badness > 0.7) return 'var(--color-danger)'
-    if (badness > 0.3) return 'var(--color-warning)'
-    return 'var(--color-heatmap-low)'
-  }
-
-  const goodness = getGoodnessLevel(value, habit)
-  if (goodness > 0.8) return 'var(--color-heatmap-max)'
-  if (goodness > 0.5) return 'var(--color-heatmap-high)'
-  if (goodness > 0.2) return 'var(--color-heatmap-mid)'
-  return 'var(--color-heatmap-low)'
-}
-
-function getGoodnessLevel(value, habit) {
-  if (!habit) return 0
-
-  switch (habit.type) {
-    case 'boolean':
-      return +isGreenValue(value, habit)
-    case 'reachable': {
-      const goal = habit.goal || 8
-      if (value >= goal + 2) return 1
-      if (value >= goal) return 0.6
-      return 0.3
-    }
-    case 'percentage':
-      return value / 100
-    case 'mood':
-      return value / 3
-    case 'rating':
-      return value / 5
-    default:
-      return Math.min(value / 10, 1)
-  }
-}
-
-function getBadnessLevel(value, habit) {
-  if (!habit) return 0
-
-  switch (habit.type) {
-    case 'boolean':
-      return +!isGreenValue(value, habit)
-    case 'reachable': {
-      const goal = habit.goal || 8
-      if (value === 0) return 1
-      return Math.max(0, 1 - (value / goal))
-    }
-    case 'percentage':
-      return 1 - (value / 100)
-    case 'mood':
-      return value === 0 ? 1 : 0
-    case 'rating':
-      return value <= 1 ? 1 : (value <= 2 ? 0.5 : 0)
-    default:
-      return 0
+  if (isGood) {
+    return { backgroundColor: 'var(--color-heatmap-mid)' }
+  } else {
+    // Simple Red for non-reachable bad values
+    return { backgroundColor: 'var(--color-heatmap-danger)' }
   }
 }
 

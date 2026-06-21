@@ -81,7 +81,7 @@ const goalText = computed(() => {
   if (diff >= 0) {
     return diff > 0 ? `+${diff} ${t('goal.above')}` : t('goal.reached')
   }
-  return `${Math.abs(diff)} ${t('goal.below')}`
+  return `${Math.abs(diff).toFixed(2)} ${t('goal.below')}`
 })
 </script>
 
@@ -118,7 +118,7 @@ const goalText = computed(() => {
   width: 100%;
   height: 8px;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--widget-bg);
   appearance: none;
   outline: none;
   margin-bottom: var(--spacing-md);
@@ -131,7 +131,7 @@ const goalText = computed(() => {
   border-radius: 50%;
   background: var(--color-accent);
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .slider::-moz-range-thumb {
@@ -141,7 +141,7 @@ const goalText = computed(() => {
   background: var(--color-accent);
   cursor: pointer;
   border: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .quick-values {
@@ -155,13 +155,13 @@ const goalText = computed(() => {
   width: 40px;
   height: 40px;
   border-radius: var(--border-radius-sm);
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--widget-bg);
   color: var(--color-text);
   font-size: var(--font-size-sm);
 }
 
 .quick-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--widget-hover-bg);
 }
 
 .quick-btn.active {
